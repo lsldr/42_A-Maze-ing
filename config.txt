@@ -1,0 +1,63 @@
+#required by project file (this are mandatory)
+WIDTH=20				# int
+HEIGHT=15				# int
+ENTRY=0,0				# tuple x,y where x<WIDTH and y<HEIGHT
+EXIT=19,14				# like ENTRY
+OUTPUT_FILE=maze.txt
+#default: False
+PERFECT=True			# if maze should have only one path (true) or more (false)
+
+# my additions (optional, can change, for now just ideas)
+
+# seed for maze gen, can be int, none or just ommited
+# to use default
+# defailt: none
+# SEED=none
+
+# algorithm for maze gen
+# avalible: randomdfs
+# default: randomdfs
+MAZEGEN=randomdfs
+
+# pathfinding algorithm
+# avalible: bfs
+# default: bfs
+PATHFINDING= bfs
+
+# should gui be opened or output file
+# default: True
+GUI=True
+
+# color of the maze in rrggbb format
+# default: 5e7eb5
+COLOR: 5e7eb5
+
+# entry color
+# format: hex rrggbb
+# default: 37c234
+ENTRY_COLOR=37c234
+
+# exit color
+# format: hex rrggbb
+# default: d91414
+EXIT_COLOR=d91414
+
+# path color
+# format: gex rrggbb
+# default: c114c7
+PATH=c114c7
+
+# path to glyph file used at the center of maze
+# glyph is made from 0 and 1 in text form
+# if none is used no glyph will be used
+# default=42.txt
+GLYPH=42.txt
+
+# color of the glyph in rrggbb format
+# default: fad328
+GLYPH_COLOR=fad328
+
+# tileset for maze rendering
+# tilesets are in tileset directory in separate directories
+# default: def
+TILESET: def

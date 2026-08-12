@@ -1,0 +1,22 @@
+[project]
+name = "a-maze-ing"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "mlx"
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+
+[tool.uv.sources]
+mlx = { path = "lib/mlx-2.2-py3-none-any.whl" }
+
+[tool.uv.workspace]
+members = [
+    "mazegen",
+]
