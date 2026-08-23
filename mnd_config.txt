@@ -2,7 +2,7 @@
 WIDTH=20				# int
 HEIGHT=15				# int
 ENTRY=0,0				# tuple x,y where x<WIDTH and y<HEIGHT
-EXIT=20,14				# like ENTRY
+EXIT=18,14				# like ENTRY
 OUTPUT_FILE=maze.txt
 #default: False
 PERFECT=True			# if maze should have only one path (true) or more (false)
