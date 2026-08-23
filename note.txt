@@ -9,3 +9,7 @@ ms:
 	I think we can make more than one alghorim for maze and pathfinding no problem
 	I choose mlx as front end but we can do terminal
 	 
+as:
+	I am OK with doing the input parsing and 1/2 algorithms for maze generation
+	and pathfinding.
+	Also, I updated the README.md choices.
