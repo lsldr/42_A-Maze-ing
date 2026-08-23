@@ -71,6 +71,45 @@ def parse_config(file_path_str: str) -> Dict[str, Any]:
             raise ConfigError("EXIT coordinates are out of bounds!")
         if (entry_x, entry_y) == (exit_x, exit_y):
             raise ConfigError("ENTRY and EXIT must be different points!")
+        if width > 9 and height > 7:
+            # 7x5 pattern centered on the grid
+            start_x = (width - 7) // 2
+            start_y = (height - 5) // 2
+
+            # Occupied relative (dx, dy) coordinates within the 7x5 box
+            pattern_42_offsets = {
+                # "4" (columns 0..2)
+                (0, 0),
+                (0, 1),
+                (0, 2),
+                (1, 2),
+                (2, 2),
+                (2, 3),
+                (2, 4),
+                # "2" (columns 4..6)
+                (4, 0),
+                (5, 0),
+                (6, 0),
+                (6, 1),
+                (6, 2),
+                (5, 2),
+                (4, 2),
+                (4, 3),
+                (4, 4),
+                (5, 4),
+                (6, 4),
+            }
+
+            pattern_cells = {
+                (start_x + dx, start_y + dy) for dx, dy in pattern_42_offsets
+            }
+
+            if (entry_x, entry_y) in pattern_cells:
+                raise ConfigError(
+                    "ENTRY coordinates fall on the '42' pattern!"
+                )
+            if (exit_x, exit_y) in pattern_cells:
+                raise ConfigError("EXIT coordinates fall on the '42' pattern!")
 
         perfect_raw = raw_config["PERFECT"].lower()
         if perfect_raw not in ("true", "false"):
