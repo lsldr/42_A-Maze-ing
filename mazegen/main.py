@@ -1,4 +1,5 @@
 import sys
+from input_parser import parse_config, ConfigError
 
 
 def main():
