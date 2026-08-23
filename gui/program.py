@@ -5,16 +5,33 @@ from PIL import Image
 
 
 class Program:
+    """Base class for a-maze-ing program
+
+    This class handels creation of window as well as callbacks for application
+    loop
+    """
     def __init__(self,
                  title: str = "Program",
-                 width: int | None = None,
-                 height: int | None = None) -> None:
+                 width: int = 1440,
+                 height: int = 810) -> None:
+        """Base class for a-maze-ing program
+
+        Args:
+            title (str): Title of a program
+                (will be seen on top of the application)
+            width (int): Width of the window
+            height (int): Height of the window
+        """
         self._win_width = width
         self._win_height = height
         self._title = title
 
     def run(self) -> None:
-        """Main function"""
+        """Main function of this class
+
+        Creates window and start main application loop
+        Will only return when application stop
+        """
         try:
             mlx_obj = Mlx()
             mlx_ptr: int | None = mlx_obj.mlx_init()
@@ -45,6 +62,11 @@ class Program:
 
     @staticmethod
     def _loop(state: State) -> None:
+        """Callback for main application loop
+
+        Args:
+            state (State): object kepping the state of application
+        """
         menu_width = state.width // 4
         maze_border = 20
         maze_width = ((state.width - menu_width) - maze_border * 2)
@@ -85,15 +107,33 @@ class Program:
 
     @staticmethod
     def _keys(key: int, state: State) -> None:
+        """Callback for handling key input
+        Only released key is send
+
+        Args:
+            key (int): keycode of pressed key
+            state (State): object kepping the state of application
+        """
         if key == 65307:
             state.quit = True
         state.active_menu.handle_keys(key, state)
 
     @staticmethod
     def _expose(state: State) -> None:
+        """Callback for expose event
+
+        Expose is called when X11 request repainting of the window
+
+        Args:
+            state (State): object kepping the state of application
+        """
         #print("Expose")
-        pass
 
     @staticmethod
     def _close(state: State) -> None:
+        """Callback for when the close button of the window was pressed
+
+        Args:
+            state (State): object kepping the state of application
+        """
         Mlx().mlx_loop_exit(state.mlx_ptr)

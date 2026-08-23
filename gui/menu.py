@@ -9,9 +9,9 @@ class MainMenuPanel:
     def __init__(self) -> None:
         """Function used to draw the menu on screen
 
-           Args:
-               img (Image): pillow Image object used to draw menu on screen
-               state (State): state object of the application
+        Args:
+            img (Image): pillow Image object used to draw menu on screen
+            state (State): state object of the application
         """
         super().__init__()
         self._font_size = 20
@@ -26,6 +26,12 @@ class MainMenuPanel:
         ]
 
     def handle_keys(self, key: int, state: st.State) -> None:
+        """Handles the keys for the menu
+
+        Args:
+            key (int): keycode of keyboard
+            state (State): state object of the program
+        """
         match key:
             case 32: # space start/pause
                 state.pause = not state.pause
@@ -45,9 +51,9 @@ class MainMenuPanel:
     def draw(self, img: Image) -> None:
         """Function used to draw the menu on screen
 
-           Args:
-               img (Image): pillow Image object used to draw menu on screen
-               state (State): state object of the application
+        Args:
+            img (Image): pillow Image object used to draw menu on screen
+            state (State): state object of the application
         """
         canvas = ImageDraw(img)
 
