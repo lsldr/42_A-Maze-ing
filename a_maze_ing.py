@@ -1,6 +1,4 @@
-def main():
-    print("Hello from a-maze-ing!")
-
+from gui.program import Program
 
 if __name__ == "__main__":
-    main()
+    Program().run()
