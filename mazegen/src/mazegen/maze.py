@@ -39,11 +39,19 @@ class Maze:
         return self._exit
 
     def is_ready(self) -> bool:
-        ready = True
+        for row in self._maze:
+            for cell in row:
+                if cell.lock:
+                    continue
+                if cell.walls == Wall.ALL:
+                    return False
+        return True
+
+    def is_valid(self) -> None:
+        """Returns nothing, raises MazeError if maze is invalid"""
+        # TODO: check for "rooms" - spaces that are at least 2x2
         for x, row in enumerate(self._maze):
             for y, cell in enumerate(row):
-                if cell.walls == Wall.ALL:
-                    ready = False
                 match ~cell.walls:
                     case Wall.NORTH:
                         if y == 0:
@@ -71,8 +79,6 @@ class Maze:
                         err = (f"Wall discrpancy between cell {x}, {y}"
                                f" and {x + dx}, {y + dy}")
                         raise MazeError(err)
-        return ready
-        # TODO: check for "rooms" - spaces that are at least 2x2
 
     def get_cell(self, pos: tuple[int, int]) -> Cell:
         if (pos[0] < 0 or pos[1] < 0 or
