@@ -52,7 +52,7 @@ wheels = [
 [[package]]
 name = "mazegen"
 version = "0.1.0"
-source = { virtual = "mazegen" }
+source = { editable = "mazegen" }
 
 [[package]]
 name = "mlx"

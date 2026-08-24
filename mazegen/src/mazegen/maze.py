@@ -1,3 +1,6 @@
+from mazegen.cell import Cell
+
+
 class Maze:
     def __init__(self,
                  size: tuple[int, int],
@@ -12,7 +15,7 @@ class Maze:
         self._size = size
         self._entry = entry
         self._exit = exit
-#        self._maze = ((Cell) for x in )
+        self._maze = [[Cell() for _ in range(size[1])] for _ in range(size[0])]
 
     @property
     def size(self) -> tuple[int, int]:
@@ -25,4 +28,3 @@ class Maze:
     @property
     def exit(self) -> tuple[int, int]:
         return self._exit
-

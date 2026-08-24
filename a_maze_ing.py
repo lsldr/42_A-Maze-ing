@@ -1,10 +1,10 @@
-from typing import Any
 import sys
 from gui.menu import MainMenuPanel
 from gui.program import Program
-from mazegen.input_parser import ConfigError, parse_config
+from input_parser import ConfigError, parse_config
 from mlx import Mlx
 from PIL import Image
+from typing import Any
 
 
 def loop_callback(prog: Program) -> None:
