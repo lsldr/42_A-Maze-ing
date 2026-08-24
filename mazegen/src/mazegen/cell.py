@@ -4,10 +4,10 @@ from enum import Flag, auto
 
 class Wall(Flag):
     NONE = 0
-    NORTH = auto()
-    EAST = auto()
-    SOUTH = auto()
-    WEST = auto()
+    NORTH = 1
+    EAST = 2
+    SOUTH = 4
+    WEST = 8
     ALL = NORTH | EAST | SOUTH | WEST
 
     def get_direction(self) -> tuple[int, int]:

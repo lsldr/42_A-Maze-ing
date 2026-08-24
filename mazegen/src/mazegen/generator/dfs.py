@@ -22,12 +22,14 @@ class DFS_gen(Maze_Generator):
         pos = self._path[-1]
         x, y = pos
         cell = self.maze.get_cell(pos)
+        cell.visited = True
         possible = [x for x in self.maze.get_neighbors_in_bounds(pos)
                    if x in cell.walls]
         neighbors = []
         for n in possible:
             dx, dy = n.get_direction()
-            if not self.maze.get_cell((x + dx, y + dy)).lock:
+            c = self.maze.get_cell((x + dx, y + dy))
+            if (not (c.lock or c.visited)):
                 neighbors.append(n)
 
         if not neighbors:
