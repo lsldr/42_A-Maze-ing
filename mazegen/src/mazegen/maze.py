@@ -1,4 +1,5 @@
 from mazegen.cell import Cell, Wall
+from mazegen.util import Point
 
 
 class MazeError(Exception):
@@ -7,9 +8,9 @@ class MazeError(Exception):
 
 class Maze:
     def __init__(self,
-                 size: tuple[int, int],
-                 entry: tuple[int, int],
-                 exit: tuple[int, int]) -> None:
+                 size: Point,
+                 entry: Point,
+                 exit: Point) -> None:
         if (entry[0] < 0 or entry[1] < 0 or
             entry[0] >= size[0] or entry[1] >= size[1]):
             raise ValueError("Entry point outside maze structure")
@@ -31,16 +32,16 @@ class Maze:
         return self._size
 
     @property
-    def entry(self) -> tuple[int, int]:
+    def entry(self) -> Point:
         return self._entry
 
     @property
-    def exit(self) -> tuple[int, int]:
+    def exit(self) -> Point:
         return self._exit
 
-    def in_bounds(self, pos: tuple[int, int]) -> bool:
-        return (pos[0] >= 0 and pos[1] >= 0 and
-            pos[0] < self.size[0] and pos[1] < self.size[1])
+    def in_bounds(self, pos: Point) -> bool:
+        return (pos.x >= 0 and pos.y >= 0 and
+            pos.x < self._size.x and pos.y < self._size.y)
 
     def is_ready(self) -> bool:
         for row in self._maze:
@@ -89,23 +90,23 @@ class Maze:
             for cell in row:
                 cell.visited = False
 
-    def get_cell(self, pos: tuple[int, int]) -> Cell:
+    def get_cell(self, pos: Point) -> Cell:
         if not self.in_bounds(pos):
             raise ValueError("Position outside the maze")
-        return self._maze[pos[0]][pos[1]]
+        return self._maze[pos.x][pos.y]
 
-    def get_neighbors_in_bounds(self, pos: tuple[int, int]) -> list[Wall]:
+    def get_neighbors_in_bounds(self, pos: Point) -> list[Wall]:
         if not self.in_bounds(pos):
             raise ValueError("Position outside the maze")
         possible = []
         x, y = pos
         for side in Wall.ALL:
             dx, dy = side.get_direction()
-            if self.in_bounds((x + dx, y + dy)):
+            if self.in_bounds(Point(x + dx, y + dy)):
                 possible.append(side)
         return possible
 
-    def try_open_wall(self, pos: tuple[int, int], side: Wall) -> bool:
+    def try_open_wall(self, pos: Point, side: Wall) -> bool:
         x, y = pos
         if not self.in_bounds(pos):
             raise ValueError("Position outside the maze")

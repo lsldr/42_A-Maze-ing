@@ -1,20 +1,22 @@
-from random import Random
 from mazegen.generator.maze_generator import Maze_Generator
 from mazegen.maze import Maze
+from mazegen.util import Point
+from random import Random
+
 
 class DFS_gen(Maze_Generator):
     def __init__(self,
                  maze: Maze, rand: Random, perfect: bool = False) -> None:
         super().__init__(maze, rand, perfect)
-        self._path: list[tuple[int, int]] = []
+        self._path: list[Point] = []
 
     def next(self) -> tuple[Maze,
-                            tuple[int, int] | None,
-                            list[tuple[int, int]] | None]:
+                            Point | None,
+                            list[Point] | None]:
         if not self._path:
             x = self._rand.randint(0, self.maze.size[0] - 1)
             y = self._rand.randint(0, self.maze.size[1] - 1)
-            pos = (x, y)
+            pos = Point(x, y)
             self.maze.get_cell(pos).visited = True
             self._path.append(pos)
             return (self.maze, None, self._path.copy())
@@ -28,7 +30,7 @@ class DFS_gen(Maze_Generator):
         neighbors = []
         for n in possible:
             dx, dy = n.get_direction()
-            c = self.maze.get_cell((x + dx, y + dy))
+            c = self.maze.get_cell(Point(x + dx, y + dy))
             if (not (c.lock or c.visited)):
                 neighbors.append(n)
 
@@ -39,6 +41,6 @@ class DFS_gen(Maze_Generator):
         move = self._rand.choice(neighbors)
         dx, dy = move.get_direction()
         if self.maze.try_open_wall(pos, move):
-            self._path.append((x + dx, y + dy))
+            self._path.append(Point(x + dx, y + dy))
 
         return (self.maze, None, self._path.copy())

@@ -1,6 +1,6 @@
-from PIL.WalImageFile import WalImageFile
 from abc import ABC, abstractmethod
 from mazegen.maze import Maze
+from mazegen.util import Point
 from random import Random
 
 
@@ -24,8 +24,8 @@ class Maze_Generator(ABC):
 
     @abstractmethod
     def next(self) -> tuple[Maze,
-                            tuple[int, int] | None,
-                            list[tuple[int, int]] | None]:
+                            Point | None,
+                            list[Point] | None]:
         """Generate next step in maze generation
 
         Returns:

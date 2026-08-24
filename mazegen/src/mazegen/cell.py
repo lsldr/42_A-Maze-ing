@@ -1,5 +1,5 @@
-from random import Random
-from enum import Flag, auto
+from enum import Flag
+from mazegen.util import Point
 
 
 class Wall(Flag):
@@ -10,14 +10,14 @@ class Wall(Flag):
     WEST = 8
     ALL = NORTH | EAST | SOUTH | WEST
 
-    def get_direction(self) -> tuple[int, int]:
+    def get_direction(self) -> Point:
         x = 0
         y = 0
         x += 1 if self.EAST in self else 0
         x -= 1 if self.WEST in self else 0
         y += 1 if self.SOUTH in self else 0
         y -= 1 if self.NORTH in self else 0
-        return (x, y)
+        return Point(x, y)
 
     def opposite(self) -> Wall:
         ret = self.NONE
