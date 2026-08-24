@@ -1,6 +1,8 @@
 import sys
 from input_parser import parse_config, ConfigError
 
+config_dict = dict()
+
 
 def main():
     print("Hello from mazegen!")

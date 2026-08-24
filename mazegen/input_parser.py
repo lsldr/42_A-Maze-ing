@@ -72,7 +72,7 @@ def parse_config(file_path_str: str) -> Dict[str, Any]:
             raise ConfigError("EXIT coordinates are out of bounds!")
         if (entry_x, entry_y) == (exit_x, exit_y):
             raise ConfigError("ENTRY and EXIT must be different points!")
-        if width > 9 and height > 7:
+        if width >= 9 and height >= 7:
             # 7x5 pattern centered on the grid
             start_x = (width - 7) // 2
             start_y = (height - 5) // 2
@@ -132,6 +132,7 @@ def parse_config(file_path_str: str) -> Dict[str, Any]:
         "exit": (exit_x, exit_y),
         "output_file": raw_config["OUTPUT_FILE"],
         "perfect": perfect,
+        "pattern_cells": pattern_cells,
         **{
             k.lower(): v
             for k, v in raw_config.items()
