@@ -30,7 +30,7 @@ GUI=True
 
 # color of the maze in rrggbb format
 # default: 5e7eb5
-COLOR: 5e7eb5
+COLOR=5e7eb5
 
 # entry color
 # format: hex rrggbb
@@ -60,4 +60,4 @@ GLYPH_COLOR=fad328
 # tileset for maze rendering
 # tilesets are in tileset directory in separate directories
 # default: def
-TILESET: def
+TILESET=def

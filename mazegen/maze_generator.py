@@ -36,7 +36,7 @@ def get_unvisited_neighbors(
         # Check for boundaries, visited cells, and immutable (pattern) cells
         if 0 <= nx < width and 0 <= ny < height:
             if (nx, ny) not in visited and (nx, ny) not in pattern_42:
-                neighbors.append(nx, ny, c_wall, n_wall)
+                neighbors.append((nx, ny, c_wall, n_wall))
 
     return neighbors
 
@@ -102,3 +102,21 @@ def dfs_maze_gen(configs: dict) -> list[list[int]]:
         add_loops(grid, width, height, pattern_42)
 
     return grid
+
+
+# mazegen/maze_generator.py
+
+
+def print_maze(grid: list[list[int]], width: int, height: int) -> None:
+    """Print an ASCII representation of the maze to stdout."""
+    # Top border
+    print("+" + "---+" * width)
+    for y in range(height):
+        line_walls = "|"
+        line_bottom = "+"
+        for x in range(width):
+            cell = grid[y][x]
+            line_walls += "   " + ("|" if cell & Wall.EAST else " ")
+            line_bottom += "---+" if cell & Wall.SOUTH else "   +"
+        print(line_walls)
+        print(line_bottom)

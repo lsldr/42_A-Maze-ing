@@ -32,14 +32,17 @@ class Program:
         Creates window and start main application loop
         Will only return when application stop
         """
+        mlx_obj = None
+        mlx_ptr = None
+        win_ptr = None
         try:
             mlx_obj = Mlx()
-            mlx_ptr: int | None = mlx_obj.mlx_init()
+            mlx_ptr = mlx_obj.mlx_init()
             if not mlx_ptr:
                 return
             width = self._win_width if self._win_width else 1440
             height = self._win_height if self._win_height else 810
-            win_ptr: int | None = mlx_obj.mlx_new_window(
+            win_ptr = mlx_obj.mlx_new_window(
                 mlx_ptr, width, height, "A-Maze-Ing"
             )
             if not win_ptr:
@@ -54,9 +57,9 @@ class Program:
             mlx_obj.mlx_hook(win_ptr, 33, 0, self._close, state)
             mlx_obj.mlx_loop(mlx_ptr)
         finally:
-            if win_ptr:
+            if mlx_obj and win_ptr:
                 mlx_obj.mlx_destroy_window(mlx_ptr, win_ptr)
-            if mlx_ptr:
+            if mlx_obj and mlx_ptr:
                 mlx_obj.mlx_release(mlx_ptr)
 
     @staticmethod
