@@ -1,11 +1,11 @@
-from gui.program import Program
+import gui.program as gp
 from PIL.Image import Image
 from PIL.ImageDraw import ImageDraw
 
 
 class MazeManager:
     """Class for managing the maze and drawing it on the screen"""
-    def tick(self, prog: Program) -> None:
+    def tick(self, prog: gp.Program) -> None:
         """Function to be called every loop of the program
 
         This function handles the maze generation
@@ -14,7 +14,7 @@ class MazeManager:
             prog (Program): state object of the program
         """
 
-    def draw(self, img: Image ,prog: Program) -> None:
+    def draw(self, img: Image ,prog: gp.Program) -> None:
         """Function to be called every loop of the program
 
         This function handles drawing the maze on screen

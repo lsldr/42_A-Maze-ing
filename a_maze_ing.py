@@ -1,3 +1,6 @@
+from random import Random
+from mazegen.generator.dfs import DFS_gen
+from mazegen.maze import Maze
 import sys
 from gui.menu import MainMenuPanel
 from gui.program import Program
@@ -136,4 +139,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    maze = Maze((20, 20), (0, 0), (19, 19))
+    dfs = DFS_gen(maze, Random())
+    dfs.finish()
+    print(maze)
     main()

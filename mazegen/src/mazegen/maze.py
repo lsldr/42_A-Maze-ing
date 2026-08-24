@@ -38,6 +38,10 @@ class Maze:
     def exit(self) -> tuple[int, int]:
         return self._exit
 
+    def in_bounds(self, pos: tuple[int, int]) -> bool:
+        return (pos[0] >= 0 and pos[1] >= 0 and
+            pos[0] < self.size[0] and pos[1] < self.size[1])
+
     def is_ready(self) -> bool:
         for row in self._maze:
             for cell in row:
@@ -80,16 +84,30 @@ class Maze:
                                f" and {x + dx}, {y + dy}")
                         raise MazeError(err)
 
+    def clean_visited(self) -> None:
+        for row in self._maze:
+            for cell in row:
+                cell.visited = False
+
     def get_cell(self, pos: tuple[int, int]) -> Cell:
-        if (pos[0] < 0 or pos[1] < 0 or
-            pos[0] >= self.size[0] or pos[1] >= self.size[1]):
+        if not self.in_bounds(pos):
             raise ValueError("Position outside the maze")
         return self._maze[pos[0]][pos[1]]
 
+    def get_neighbors_in_bounds(self, pos: tuple[int, int]) -> list[Wall]:
+        if not self.in_bounds(pos):
+            raise ValueError("Position outside the maze")
+        possible = []
+        x, y = pos
+        for side in Wall.ALL:
+            dx, dy = side.get_direction()
+            if self.in_bounds((x + dx, y + dy)):
+                possible.append(side)
+        return possible
+
     def try_open_wall(self, pos: tuple[int, int], side: Wall) -> bool:
         x, y = pos
-        if (x < 0 or y < 0 or
-            x >= self.size[0] or y >= self.size[1]):
+        if not self.in_bounds(pos):
             raise ValueError("Position outside the maze")
         dx, dy  = side.get_direction()
         if abs(dx + dy) != 1:

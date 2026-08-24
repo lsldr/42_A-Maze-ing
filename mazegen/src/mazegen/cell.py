@@ -1,4 +1,4 @@
-from typing import Self
+from random import Random
 from enum import Flag, auto
 
 
@@ -54,6 +54,7 @@ class Cell:
     def __init__(self) -> None:
         self._walls: Wall = Wall.ALL
         self.lock = False
+        self.visited = False
 
     def open_wall(self, side: Wall) -> None:
         if not self.lock:

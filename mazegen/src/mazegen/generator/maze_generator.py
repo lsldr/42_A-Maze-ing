@@ -1,3 +1,4 @@
+from PIL.WalImageFile import WalImageFile
 from abc import ABC, abstractmethod
 from mazegen.maze import Maze
 from random import Random
@@ -33,11 +34,13 @@ class Maze_Generator(ABC):
             optional stack of positions
         """
 
-    @abstractmethod
     def finish(self) -> Maze:
         """Finish maze generation and return finished maze
 
         Returns:
             ready maze
         """
-        ...
+        maze = self.maze
+        while not self.maze.is_ready():
+            maze, _, _ = self.next()
+        return maze
