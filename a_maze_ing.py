@@ -1,8 +1,9 @@
 import sys
-from mazegen.input_parser import parse_config, ConfigError
+from gui.program import Program
+from mazegen.input_parser import ConfigError, parse_config
 
 
-def main():
+def main() -> None:
     print("Hello from a-maze-ing!")
     if len(sys.argv) != 2:
         print(
@@ -13,7 +14,8 @@ def main():
         sys.exit(1)
     try:
         config_dict = parse_config(sys.argv[1].strip())
-        print(f"The config dict is:\n{config_dict}")
+        print(config_dict)
+        Program().run()
     except (FileNotFoundError, ConfigError) as e:
         print(f"Error parsing configs with the provided filename:\n{e}")
 

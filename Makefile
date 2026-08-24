@@ -4,10 +4,10 @@ install:
 	@uv sync
 
 run:
-	@uv run main.py
+	@uv run a_maze_ing.py config.txt
 
 debug:
-	@uv run -m pdb main.py
+	@uv run -m pdb a_maze_ing.py config.txt
 
 clean:
 	@rm -Rf .mypy_cache
