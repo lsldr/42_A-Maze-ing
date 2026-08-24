@@ -13,7 +13,7 @@ def main():
         sys.exit(1)
     try:
         config_dict = parse_config(sys.argv[1].strip())
-        print(config_dict)
+        print(f"The config dict is:\n{config_dict}")
     except (FileNotFoundError, ConfigError) as e:
         print(f"Error parsing configs with the provided filename:\n{e}")
 
