@@ -1,4 +1,8 @@
-from mazegen.cell import Cell
+from mazegen.cell import Cell, Wall
+
+
+class MazeError(Exception):
+    """Error class for when somethin is not right with maze object"""
 
 
 class Maze:
@@ -19,6 +23,11 @@ class Maze:
 
     @property
     def size(self) -> tuple[int, int]:
+        """Size of the maze
+
+        Returns:
+            width (int) and height (int)
+        """
         return self._size
 
     @property
@@ -28,3 +37,71 @@ class Maze:
     @property
     def exit(self) -> tuple[int, int]:
         return self._exit
+
+    def is_ready(self) -> bool:
+        ready = True
+        for x, row in enumerate(self._maze):
+            for y, cell in enumerate(row):
+                if cell.walls == Wall.ALL:
+                    ready = False
+                match ~cell.walls:
+                    case Wall.NORTH:
+                        if y == 0:
+                            raise MazeError("Wall missing on the "
+                                            "north edge of the maze")
+                    case Wall.SOUTH:
+                        if y == self.size[1] - 1:
+                            raise MazeError("Wall missing on the "
+                                            "south edge of the maze")
+                    case Wall.WEST:
+                        if x == 0:
+                            raise MazeError("Wall missing on the "
+                                            "west edge of the maze")
+                    case Wall.SOUTH:
+                        if x == self.size[0] - 1:
+                            raise MazeError("Wall missing on the "
+                                            "east edge of the maze")
+                for dir in [Wall.NORTH, Wall.WEST]:
+                    opposite = dir.opposite()
+                    dx, dy = dir.get_direction()
+                    if x + dx < 0 or y + dy < 0:
+                        continue
+                    if (dir not in cell.walls and
+                        opposite in self._maze[x + dx][y + dy].walls):
+                        err = (f"Wall discrpancy between cell {x}, {y}"
+                               f" and {x + dx}, {y + dy}")
+                        raise MazeError(err)
+        return ready
+        # TODO: check for "rooms" - spaces that are at least 2x2
+
+    def get_cell(self, pos: tuple[int, int]) -> Cell:
+        if (pos[0] < 0 or pos[1] < 0 or
+            pos[0] >= self.size[0] or pos[1] >= self.size[1]):
+            raise ValueError("Position outside the maze")
+        return self._maze[pos[0]][pos[1]]
+
+    def try_open_wall(self, pos: tuple[int, int], side: Wall) -> bool:
+        x, y = pos
+        if (x < 0 or y < 0 or
+            x >= self.size[0] or y >= self.size[1]):
+            raise ValueError("Position outside the maze")
+        dx, dy  = side.get_direction()
+        if abs(dx + dy) != 1:
+            raise ValueError("side need to be only one of the direction")
+        nx, ny = x + dx, y + dy
+        if self._maze[pos[0]][pos[1]].lock or self._maze[nx][ny].lock:
+            return False
+        # Checked above if safe
+        self._maze[x][y].open_wall(side)
+        self._maze[nx][ny].open_wall(side.opposite())
+        return True
+
+    def __str__(self) -> str:
+        ret = ""
+        for row in self._maze:
+            for cell in row:
+                ret += str(cell)
+            ret += "\n"
+        ret += f"\n{self.entry[0]},{self.entry[1]}\n"
+        ret += f"{self.exit[0]},{self.exit[0]}\n"
+        return ret
