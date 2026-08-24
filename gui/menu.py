@@ -1,4 +1,4 @@
-import gui.program as program
+from gui import program
 from PIL.Image import Image
 from PIL.ImageDraw import ImageDraw
 
@@ -18,8 +18,9 @@ class MainMenuPanel:
         self._menu_list = [
             "Space: Start/Stop",
             "p: skip animation",
-            "c: change maze color",
-            "v: change 42 color",
+            "x: change maze color",
+            "c: change 42 color",
+            "v: change path color",
             "n: new maze from random seed",
             "m: new maze from seed",
             "q: quit"
@@ -37,16 +38,20 @@ class MainMenuPanel:
                 prog.pause = not prog.pause
             case 112: # p skip maze anim
                 prog.skip = True
-            case 99: # c change maze color
-                print("maze color") #TODO: change maze color
-            case 118: # v change 42 color
-                print("42 color") #TODO: change 42 color
+            case 120: # x change maze color
+                prog.colors.maze_next()
+            case 99: # c change 42 color
+                prog.colors.emblem_next()
+            case 118: # v change path color
+                prog.colors.path_next()
             case 110: # n new maze new seed
                 print("new rand") #TODO: seed to random
             case 109: # m new maze same seed
                 print("old rand") #TODO: reload maze
             case 113:
                 prog.quit = True
+            case _:
+                print(key)
 
     def draw(self, img: Image) -> None:
         """Function used to draw the menu on screen

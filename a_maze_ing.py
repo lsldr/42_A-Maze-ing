@@ -11,7 +11,7 @@ def loop_callback(prog: Program) -> None:
     """Callback for main application loop
 
     Args:
-        state (State): object kepping the state of application
+        prog (Program): object keeping the state of application
     """
     menu_width = prog.width // 4
     maze_border = 20
@@ -32,7 +32,9 @@ def loop_callback(prog: Program) -> None:
     # draw maze
     maze_ptr = mlx.mlx_new_image(prog.mlx_ptr, maze_width, maze_height)
     maze_data, _, _, _ = mlx.mlx_get_data_addr(maze_ptr)
-    maze = Image.new("RGBA", (maze_width, maze_height), 0xFFFFFFFF)
+    maze = Image.new("RGBA", (maze_width, maze_height), 0xFFDDDDDD)
+    prog.maze.tick(prog)
+    prog.maze.draw(maze, prog)
 
     maze_data[:] = maze.tobytes()
     mlx.mlx_clear_window(prog.mlx_ptr, prog.win_ptr)
@@ -54,7 +56,7 @@ def keys_callback(key: int, prog: Program) -> None:
 
     Args:
         key (int): keycode of pressed key
-        state (State): object kepping the state of application
+        prog (Program): object keeping the state of application
     """
     if key == 65307:
         prog.quit = True
@@ -67,7 +69,7 @@ def expose_callback(prog: Program) -> None:
     Expose is called when X11 request repainting of the window
 
     Args:
-        state (State): object kepping the state of application
+        prog (Program): object keeping the state of application
     """
     # print("Expose")
 
@@ -76,13 +78,13 @@ def close_callback(prog: Program) -> None:
     """Callback for when the close button of the window was pressed
 
     Args:
-        state (State): object kepping the state of application
+        prog (Program): object kepping the state of application
     """
     Mlx().mlx_loop_exit(prog.mlx_ptr)
 
 
 def run(config: dict[str, Any]) -> None:
-        """Main function of this class
+        """Configure and start the application
 
         Creates window and start main application loop
         Will only return when application stop
