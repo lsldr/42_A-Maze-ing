@@ -1,4 +1,3 @@
-from typing import Dict, Any
 import random
 from enum import IntFlag
 
@@ -18,28 +17,6 @@ DIRECTIONS: list[tuple[int, int, Wall, Wall]] = [
     (0, 1, Wall.SOUTH, Wall.NORTH),  # Move South
     (-1, 0, Wall.WEST, Wall.EAST),  # Move West
 ]
-
-
-def grid_builder(
-    configs: Dict[str, Any],
-) -> tuple[list[list[int]], set[tuple[int, int]] | set]:
-    grid = list[list[int]]
-    w = configs["width"]
-    h = configs["height"]
-
-    grid = list([[15] * w] * h)
-
-    if w >= 9 and h >= 7:
-        immutable = configs["pattern_cells"]
-    else:
-        print(
-            "Warning: maze dimensions are too small for the 42 pattern!\n"
-            "Generating a maze without the 42 pattern."
-        )
-        immutable = set()
-
-    print(grid)
-    return tuple(grid, immutable)
 
 
 def get_unvisited_neighbors(
@@ -62,30 +39,6 @@ def get_unvisited_neighbors(
                 neighbors.append(nx, ny, c_wall, n_wall)
 
     return neighbors
-
-
-def rm_random_wall(
-    cx: int,
-    cy: int,
-    grid: list[list[int]],
-    visited: set[tuple[int, int]],
-    pattern_42: set[tuple[int, int]],
-    width: int,
-    height: int,
-) -> None:
-    """Randomly selects one and removes a wall with a valid neighboring cell"""
-    neighbors = get_unvisited_neighbors(
-        cx, cy, width, height, visited, pattern_42
-    )
-
-    if not neighbors:
-        return
-
-    nx, ny, c_wall, n_wall = random.choice(neighbors)
-
-    # Remove current and neighbor cells's walls from among random choice
-    grid[cy][cx] &= ~c_wall
-    grid[ny][nx] &= ~n_wall
 
 
 def add_loops(
