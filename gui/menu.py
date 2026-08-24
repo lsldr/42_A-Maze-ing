@@ -1,6 +1,5 @@
+from PIL import Image, ImageDraw
 import gui.program as program
-from PIL.Image import Image
-from PIL.ImageDraw import ImageDraw
 
 
 class MainMenuPanel:
@@ -48,14 +47,13 @@ class MainMenuPanel:
             case 113:
                 prog.quit = True
 
-    def draw(self, img: Image) -> None:
+    def draw(self, img: Image.Image) -> None:
         """Function used to draw the menu on screen
 
         Args:
-            img (Image): pillow Image object used to draw menu on screen
-            state (State): state object of the application
+            img (Image.Image): pillow Image object used to draw menu on screen
         """
-        canvas = ImageDraw(img)
+        canvas = ImageDraw.Draw(img)
 
         if self._menu_list:
             for i, el in enumerate(self._menu_list):
