@@ -10,10 +10,10 @@ class Program:
     This class handels creation of window as well as callbacks for application
     loop
     """
-    def __init__(self,
-                 title: str = "Program",
-                 width: int = 1440,
-                 height: int = 810) -> None:
+
+    def __init__(
+        self, title: str = "Program", width: int = 1440, height: int = 810
+    ) -> None:
         """Base class for a-maze-ing program
 
         Args:
@@ -39,10 +39,9 @@ class Program:
                 return
             width = self._win_width if self._win_width else 1440
             height = self._win_height if self._win_height else 810
-            win_ptr: int | None = mlx_obj.mlx_new_window(mlx_ptr,
-                                                         width,
-                                                         height,
-                                                         "A-Maze-Ing")
+            win_ptr: int | None = mlx_obj.mlx_new_window(
+                mlx_ptr, width, height, "A-Maze-Ing"
+            )
             if not win_ptr:
                 return
 
@@ -69,7 +68,7 @@ class Program:
         """
         menu_width = state.width // 4
         maze_border = 20
-        maze_width = ((state.width - menu_width) - maze_border * 2)
+        maze_width = (state.width - menu_width) - maze_border * 2
         maze_height = state.height - maze_border * 2
 
         mlx = Mlx()
@@ -86,20 +85,16 @@ class Program:
         # draw maze
         maze_ptr = mlx.mlx_new_image(state.mlx_ptr, maze_width, maze_height)
         maze_data, _, _, _ = mlx.mlx_get_data_addr(maze_ptr)
-        maze = Image.new("RGBA", (maze_width, maze_height), 0xffffffff)
+        maze = Image.new("RGBA", (maze_width, maze_height), 0xFFFFFFFF)
 
         maze_data[:] = maze.tobytes()
         mlx.mlx_clear_window(state.mlx_ptr, state.win_ptr)
-        mlx.mlx_put_image_to_window(state.mlx_ptr,
-                                    state.win_ptr,
-                                    menu_ptr,
-                                    state.width - menu_width,
-                                    0)
-        mlx.mlx_put_image_to_window(state.mlx_ptr,
-                                    state.win_ptr,
-                                    maze_ptr,
-                                    maze_border,
-                                    maze_border)
+        mlx.mlx_put_image_to_window(
+            state.mlx_ptr, state.win_ptr, menu_ptr, state.width - menu_width, 0
+        )
+        mlx.mlx_put_image_to_window(
+            state.mlx_ptr, state.win_ptr, maze_ptr, maze_border, maze_border
+        )
         mlx.mlx_destroy_image(state.mlx_ptr, menu_ptr)
         mlx.mlx_destroy_image(state.mlx_ptr, maze_ptr)
         if state.quit:
@@ -127,7 +122,7 @@ class Program:
         Args:
             state (State): object kepping the state of application
         """
-        #print("Expose")
+        # print("Expose")
 
     @staticmethod
     def _close(state: State) -> None:
