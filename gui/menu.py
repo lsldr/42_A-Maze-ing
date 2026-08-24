@@ -1,4 +1,4 @@
-import gui.state as st
+import gui.program as program
 from PIL.Image import Image
 from PIL.ImageDraw import ImageDraw
 
@@ -25,7 +25,7 @@ class MainMenuPanel:
             "q: quit"
         ]
 
-    def handle_keys(self, key: int, state: st.State) -> None:
+    def handle_keys(self, key: int, prog: program.Program) -> None:
         """Handles the keys for the menu
 
         Args:
@@ -34,9 +34,9 @@ class MainMenuPanel:
         """
         match key:
             case 32: # space start/pause
-                state.pause = not state.pause
+                prog.pause = not prog.pause
             case 112: # p skip maze anim
-                state.skip = True
+                prog.skip = True
             case 99: # c change maze color
                 print("maze color") #TODO: change maze color
             case 118: # v change 42 color
@@ -46,7 +46,7 @@ class MainMenuPanel:
             case 109: # m new maze same seed
                 print("old rand") #TODO: reload maze
             case 113:
-                state.quit = True
+                prog.quit = True
 
     def draw(self, img: Image) -> None:
         """Function used to draw the menu on screen

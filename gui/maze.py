@@ -1,11 +1,11 @@
-from gui.state import State
+from gui.program import Program
 from PIL.Image import Image
 from PIL.ImageDraw import ImageDraw
 
 
 class MazePanel:
     """Class for managing the maze and drawing it on the screen"""
-    def loop(self, img: Image, state: State) -> None:
+    def loop(self, img: Image, prog: Program) -> None:
         """Function to be called every loop of the program
 
         This function handles the maze generation and
