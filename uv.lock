@@ -13,6 +13,7 @@ name = "a-maze-ing"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "mazegen" },
     { name = "mlx" },
     { name = "pillow" },
 ]
@@ -24,6 +25,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "mazegen", editable = "mazegen" },
     { name = "mlx", path = "lib/mlx-2.2-py3-none-any.whl" },
     { name = "pillow", specifier = ">=12.3.0" },
 ]
@@ -52,7 +54,7 @@ wheels = [
 [[package]]
 name = "mazegen"
 version = "0.1.0"
-source = { virtual = "mazegen" }
+source = { editable = "mazegen" }
 
 [[package]]
 name = "mlx"

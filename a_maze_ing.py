@@ -1,15 +1,22 @@
-from typing import Any
+from random import Random
+from mazegen.generator.dfs import DFS_gen
+from mazegen.maze import Maze
 import sys
 from gui.maze import MazePanel
 from gui.menu import MainMenuPanel
 from gui.program import Program
-from mazegen.input_parser import ConfigError, parse_config
-from mazegen.maze_generator import dfs_maze_gen
+from input_parser import ConfigError, parse_config
 from mlx import Mlx
 from PIL import Image
+from typing import Any
 
 
 def loop_callback(prog: Program) -> None:
+    """Callback for main application loop
+
+    Args:
+        prog (Program): object keeping the state of application
+    """
     menu_width = prog.width // 4
     maze_border = 20
     maze_width = (prog.width - menu_width) - maze_border * 2
@@ -27,9 +34,9 @@ def loop_callback(prog: Program) -> None:
     # 2. Draw maze
     maze_ptr = mlx.mlx_new_image(prog.mlx_ptr, maze_width, maze_height)
     maze_data, _, _, _ = mlx.mlx_get_data_addr(maze_ptr)
-    maze = Image.new("RGBA", (maze_width, maze_height), 0xFFFFFFFF)
-
-    prog.active_maze.draw(maze, prog)  # <--- Call the maze drawer!
+    maze = Image.new("RGBA", (maze_width, maze_height), 0xFFDDDDDD)
+    prog.maze.tick(prog)
+    prog.maze.draw(maze, prog)
 
     maze_data[:] = maze.tobytes()
     mlx.mlx_clear_window(prog.mlx_ptr, prog.win_ptr)
@@ -46,33 +53,57 @@ def loop_callback(prog: Program) -> None:
 
 
 def keys_callback(key: int, prog: Program) -> None:
+    """Callback for handling key input
+    Only released key is send
+
+    Args:
+        key (int): keycode of pressed key
+        prog (Program): object keeping the state of application
+    """
     if key == 65307:
         prog.quit = True
     prog.active_menu.handle_keys(key, prog)
 
 
 def expose_callback(prog: Program) -> None:
-    pass
+    """Callback for expose event
+
+    Expose is called when X11 request repainting of the window
+
+    Args:
+        prog (Program): object keeping the state of application
+    """
+    # print("Expose")
 
 
 def close_callback(prog: Program) -> None:
+    """Callback for when the close button of the window was pressed
+
+    Args:
+        prog (Program): object kepping the state of application
+    """
     Mlx().mlx_loop_exit(prog.mlx_ptr)
 
 
-def run(config: dict[str, Any], grid: list[list[int]]) -> None:
-    width = 1440
-    height = 810
-    title = "A-Maze-Ing"
-    try:
-        mlx_obj = Mlx()
-        mlx_ptr: int | None = mlx_obj.mlx_init()
-        if not mlx_ptr:
-            return
-        win_ptr: int | None = mlx_obj.mlx_new_window(
-            mlx_ptr, width, height, title
-        )
-        if not win_ptr:
-            return
+def run(config: dict[str, Any]) -> None:
+        """Configure and start the application
+
+        Creates window and start main application loop
+        Will only return when application stop
+        """
+        width = 1440
+        height = 810
+        title = "A-Maze-Ing"
+        try:
+            mlx_obj = Mlx()
+            mlx_ptr: int | None = mlx_obj.mlx_init()
+            if not mlx_ptr:
+                return
+            win_ptr: int | None = mlx_obj.mlx_new_window(
+                mlx_ptr, width, height, title
+            )
+            if not win_ptr:
+                return
 
         main_menu = MainMenuPanel()
         maze_panel = MazePanel()
@@ -116,4 +147,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    maze = Maze((20, 20), (0, 0), (19, 19))
+    dfs = DFS_gen(maze, Random())
+    dfs.finish()
+    print(maze)
     main()

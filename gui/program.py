@@ -1,6 +1,45 @@
-from typing import Any
 import gui.menu as gmenu
 import gui.maze as gmaze
+from typing import Any
+
+
+class Colors:
+    """Class keeping color combinations for drawing a maze"""
+
+    def __init__(self) -> None:
+        self._maze_idx = 0
+        self._emblem_idx = 0
+        self._path_idx = 0
+        self._maze_colors = [0xFF4F4F4F, 0xFF53CFE8, 0xFFE04EAA, 0xFFC9502C]
+        self._emblem_colors = [0xFFFCE914, 0xFF12CE08, 0xFF6C29D1, 0xFF293AD1]
+        self._path_colors = [0xFF52C2F9, 0xFF52F9DD, 0xFF28E034, 0xFF9D60F2]
+
+    def maze_next(self) -> None:
+        """Select next color for maze walls"""
+        self._maze_idx = (self._maze_idx + 1) % len(self._maze_colors)
+
+    def emblem_next(self) -> None:
+        """Select next color for 42 emblem"""
+        self._emblem_idx = (self._emblem_idx + 1) % len(self._emblem_colors)
+
+    def path_next(self) -> None:
+        """Select next color of the path"""
+        self._path_idx = (self._path_idx + 1) % len(self._path_colors)
+
+    @property
+    def maze(self) -> int:
+        """Color of the maze walls"""
+        return self._maze_colors[self._maze_idx]
+
+    @property
+    def emblem(self) -> int:
+        """Color of the 42 emblam"""
+        return self._emblem_colors[self._emblem_idx]
+
+    @property
+    def path(self) -> int:
+        """Color of the path"""
+        return self._path_colors[self._path_idx]
 
 
 class Program:
@@ -39,11 +78,12 @@ class Program:
         self._grid = grid
         self._width = width
         self._height = height
-        self._active_maze = maze_panel
-        self._active_menu = menu
-        self._pause = pause
-        self._skip = skip
-        self._quit = False
+        self.active_menu = menu
+        self.maze = gmaze.MazeManager()
+        self.pause = pause
+        self.skip = skip
+        self.quit = False
+        self._colors = Colors()
 
     @property
     def mlx_ptr(self) -> int:
@@ -80,38 +120,6 @@ class Program:
         return self._height
 
     @property
-    def active_maze(self) -> gmaze.MazePanel:
-        """Active maze drawing panel"""
-        return self._active_maze
-
-    @property
-    def active_menu(self) -> gmenu.MainMenuPanel:
-        """Active menu panel"""
-        return self._active_menu
-
-    @property
-    def pause(self) -> bool:
-        """Whether animation is paused"""
-        return self._pause
-
-    @pause.setter
-    def pause(self, value: bool) -> None:
-        self._pause = value
-
-    @property
-    def skip(self) -> bool:
-        """Whether animation is skipped"""
-        return self._skip
-
-    @skip.setter
-    def skip(self, value: bool) -> None:
-        self._skip = value
-
-    @property
-    def quit(self) -> bool:
-        """Whether application requested to quit"""
-        return self._quit
-
-    @quit.setter
-    def quit(self, value: bool) -> None:
-        self._quit = value
+    def colors(self) -> Colors:
+        """Color object of this program"""
+        return self._colors
