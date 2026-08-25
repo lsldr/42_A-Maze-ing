@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Any, Dict, Set
+from mazegen.util import Point
 
 
 class ConfigError(Exception):

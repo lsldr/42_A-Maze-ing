@@ -36,17 +36,17 @@ class Wall(Flag):
         if self.value > 9:
             match self.value:
                 case 10:
-                    return "A"
+                    return "a"
                 case 11:
-                    return "B"
+                    return "b"
                 case 12:
-                    return "C"
+                    return "c"
                 case 13:
-                    return "D"
+                    return "d"
                 case 14:
-                    return "E"
+                    return "e"
                 case 15:
-                    return "F"
+                    return "f"
         return str(self.value)
 
 

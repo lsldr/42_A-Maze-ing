@@ -7,15 +7,20 @@ class MazeError(Exception):
 
 
 class Maze:
-    def __init__(self,
-                 size: Point,
-                 entry: Point,
-                 exit: Point) -> None:
-        if (entry[0] < 0 or entry[1] < 0 or
-            entry[0] >= size[0] or entry[1] >= size[1]):
+    def __init__(self, size: Point, entry: Point, exit: Point) -> None:
+        if (
+            entry[0] < 0
+            or entry[1] < 0
+            or entry[0] >= size[0]
+            or entry[1] >= size[1]
+        ):
             raise ValueError("Entry point outside maze structure")
-        if (exit[0] < 0 or exit[1] < 0 or
-            exit[0] >= size[0] or exit[1] >= size[1]):
+        if (
+            exit[0] < 0
+            or exit[1] < 0
+            or exit[0] >= size[0]
+            or exit[1] >= size[1]
+        ):
             raise ValueError("Exit point outside maze structure")
         self._size = size
         self._entry = entry
@@ -39,9 +44,17 @@ class Maze:
     def exit(self) -> Point:
         return self._exit
 
+    @property
+    def grid(self) -> list[list[Cell]]:
+        return self._maze
+
     def in_bounds(self, pos: Point) -> bool:
-        return (pos.x >= 0 and pos.y >= 0 and
-            pos.x < self._size.x and pos.y < self._size.y)
+        return (
+            pos.x >= 0
+            and pos.y >= 0
+            and pos.x < self._size.x
+            and pos.y < self._size.y
+        )
 
     def is_ready(self) -> bool:
         for row in self._maze:
@@ -60,29 +73,37 @@ class Maze:
                 match ~cell.walls:
                     case Wall.NORTH:
                         if y == 0:
-                            raise MazeError("Wall missing on the "
-                                            "north edge of the maze")
+                            raise MazeError(
+                                "Wall missing on the " "north edge of the maze"
+                            )
                     case Wall.SOUTH:
                         if y == self.size[1] - 1:
-                            raise MazeError("Wall missing on the "
-                                            "south edge of the maze")
+                            raise MazeError(
+                                "Wall missing on the " "south edge of the maze"
+                            )
                     case Wall.WEST:
                         if x == 0:
-                            raise MazeError("Wall missing on the "
-                                            "west edge of the maze")
+                            raise MazeError(
+                                "Wall missing on the " "west edge of the maze"
+                            )
                     case Wall.SOUTH:
                         if x == self.size[0] - 1:
-                            raise MazeError("Wall missing on the "
-                                            "east edge of the maze")
+                            raise MazeError(
+                                "Wall missing on the " "east edge of the maze"
+                            )
                 for dir in [Wall.NORTH, Wall.WEST]:
                     opposite = dir.opposite()
                     dx, dy = dir.get_direction()
                     if x + dx < 0 or y + dy < 0:
                         continue
-                    if (dir not in cell.walls and
-                        opposite in self._maze[x + dx][y + dy].walls):
-                        err = (f"Wall discrpancy between cell {x}, {y}"
-                               f" and {x + dx}, {y + dy}")
+                    if (
+                        dir not in cell.walls
+                        and opposite in self._maze[x + dx][y + dy].walls
+                    ):
+                        err = (
+                            f"Wall discrpancy between cell {x}, {y}"
+                            f" and {x + dx}, {y + dy}"
+                        )
                         raise MazeError(err)
 
     def clean_visited(self) -> None:
@@ -110,7 +131,7 @@ class Maze:
         x, y = pos
         if not self.in_bounds(pos):
             raise ValueError("Position outside the maze")
-        dx, dy  = side.get_direction()
+        dx, dy = side.get_direction()
         if abs(dx + dy) != 1:
             raise ValueError("side need to be only one of the direction")
         nx, ny = x + dx, y + dy

@@ -54,7 +54,7 @@ class Program:
         width: int,
         height: int,
         menu: gmenu.MainMenuPanel,
-        maze_panel: gmaze.MazePanel,
+        maze_panel: gmaze.MazeManager,
         pause: bool = False,
         skip: bool = False,
     ) -> None:

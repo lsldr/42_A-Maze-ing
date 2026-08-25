@@ -5,8 +5,9 @@ from random import Random
 
 
 class Maze_Generator(ABC):
-    def __init__(self,
-                 maze: Maze, rand: Random, perfect: bool = False) -> None:
+    def __init__(
+        self, maze: Maze, rand: Random, perfect: bool = False
+    ) -> None:
         self._rand = rand
         self.maze = maze
         self._perfect = perfect
@@ -23,9 +24,7 @@ class Maze_Generator(ABC):
         return self.maze.is_ready()
 
     @abstractmethod
-    def next(self) -> tuple[Maze,
-                            Point | None,
-                            list[Point] | None]:
+    def next(self) -> tuple[Maze, Point | None, list[Point] | None]:
         """Generate next step in maze generation
 
         Returns:

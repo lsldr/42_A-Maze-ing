@@ -3,7 +3,7 @@ from mazegen.pathfinder.pathfinder import Pathfinder
 from mazegen.util import Point
 
 
-class BFS_pathfiner(Pathfinder):
+class BFS_pathfinder(Pathfinder):
     def __init__(self, maze: Maze) -> None:
         super().__init__(maze)
         self._stack: list[Point] = []

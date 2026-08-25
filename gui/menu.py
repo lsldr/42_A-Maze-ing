@@ -1,6 +1,6 @@
 from gui import program
-from PIL.Image import Image
-from PIL.ImageDraw import ImageDraw
+from PIL import Image
+from PIL import ImageDraw
 
 
 class MainMenuPanel:
@@ -54,17 +54,14 @@ class MainMenuPanel:
                 print(key)
 
     def draw(self, img: Image.Image) -> None:
-        """Function used to draw the menu on screen
-
-        Args:
-            img (Image.Image): pillow Image object used to draw menu on screen
-        """
+        """Function used to draw the menu on screen."""
         canvas = ImageDraw.Draw(img)
 
         if self._menu_list:
             for i, el in enumerate(self._menu_list):
                 canvas.text(
-                    (0, 20 * (i + 1) + self._font_size * i),
+                    (10, 20 * (i + 1) + self._font_size * i),
                     el,
+                    fill="white",  # Make text visible
                     font_size=self._font_size,
                 )
