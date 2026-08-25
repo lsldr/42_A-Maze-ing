@@ -53,7 +53,7 @@ class Maze:
         return self._maze
 
     def __str__(self) -> str:
-        """Returns the maze represented as hexadecimal characters row by row."""
+        """Returns the maze represented as hex chars row by row."""
         lines = []
         # Iterate row by row (y first, then x)
         for y in range(self._size.y):
@@ -110,7 +110,7 @@ class Maze:
         )
 
     def _is_3x3_window_open(self, x0: int, y0: int) -> bool:
-        """Checks if the 3x3 block [x0, x0+2] x [y0, y0+2] has
+        """Checks if the 3x3 block {x0..x0+2}{y0..y0+2} has
         all internal walls open."""
         for x in range(x0, x0 + 3):
             for y in range(y0, y0 + 3):
@@ -159,7 +159,7 @@ class Maze:
         return creates_room
 
     def is_ready(self) -> bool:
-        """Check if all non-locked cells have been reached."""
+        """Check if all non-locked cells have at least 1 wall carved out."""
         for x in range(self._size.x):
             for y in range(self._size.y):
                 cell = self._maze[x][y]

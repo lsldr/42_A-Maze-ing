@@ -9,7 +9,7 @@ class DFS_gen(Maze_Generator):
     def __init__(self, maze: Maze, rand: Random, perfect: bool = True) -> None:
         super().__init__(maze, rand, perfect)
         self._stack: list[Point] = []
-        # Pre-populate visited with pattern cells so DFS ignores them
+        # Pre-populate visited with 42 pattern cells so DFS ignores them
         self._visited: set[Point] = set(self.maze.pattern_cells)
 
     def next(self) -> tuple[Maze, Point | None, list[Point] | None]:
@@ -45,8 +45,8 @@ class DFS_gen(Maze_Generator):
                 self._stack.append(npos)
             return (self.maze, npos, self._stack.copy())
         else:
-            # Backtrack from a dead end
-            # Then loook for the prev cell's neighbors if it's in stack
+            # Backtrack from a dead end, then
+            # look for the prev cell's neighbors until the maze is ready
             self._stack.pop()
             return (self.maze, pos, self._stack.copy())
 
@@ -55,8 +55,10 @@ class DFS_gen(Maze_Generator):
         and respecting 42 pattern."""
         all_directions = [Wall.NORTH, Wall.EAST, Wall.SOUTH, Wall.WEST]
 
-        while True:
-            # 1. Collect all dead ends (degree == 1)
+        # Max retry passes to ensure all dead ends are resolved
+        max_passes = 10
+        for _ in range(max_passes):
+            # 1. Collect all current dead ends
             dead_ends: list[Point] = [
                 Point(x, y)
                 for x in range(self.maze.size.x)
@@ -70,45 +72,71 @@ class DFS_gen(Maze_Generator):
             self._rand.shuffle(dead_ends)
             modified_any = False
 
+            # --- PHASE 1: Try to pair Dead Ends together first ---
             for pos in dead_ends:
                 if self.maze.count_open_passages(pos) != 1:
-                    continue  # Already resolved in this pass
+                    continue  # Already resolved
 
                 dead_end_candidates: list[tuple[Wall, Point]] = []
-                regular_candidates: list[tuple[Wall, Point]] = []
-
                 for side in all_directions:
-                    # Wall must be currently closed
                     if side not in self.maze.get_cell(pos).walls:
                         continue
-
                     dx, dy = side.get_direction()
                     npos = Point(pos.x + dx, pos.y + dy)
 
                     if (
-                        not self.maze.in_bounds(npos)
-                        or self.maze.get_cell(npos).lock
+                        self.maze.in_bounds(npos)
+                        and not self.maze.get_cell(npos).lock
+                        and not self.maze.would_create_3x3_room(pos, side)
+                        and self.maze.count_open_passages(npos) == 1
                     ):
-                        continue
-
-                    # Reject if it would create a 3x3 open room
-                    if self.maze.would_create_3x3_room(pos, side):
-                        continue
-
-                    if self.maze.count_open_passages(npos) == 1:
                         dead_end_candidates.append((side, npos))
-                    else:
-                        regular_candidates.append((side, npos))
 
-                # Priority 1: Connect to another dead end
-                # Priority 2: Connect to an adjacent corridor
-                chosen_pool = dead_end_candidates or regular_candidates
-                if chosen_pool:
-                    side, _ = self._rand.choice(chosen_pool)
+                if dead_end_candidates:
+                    side, _ = self._rand.choice(dead_end_candidates)
                     self.maze.try_open_wall(pos, side)
                     modified_any = True
 
-            # If no dead ends could be safely removed in a full pass, stop
+            # --- PHASE 2: Connect remaining Dead Ends to regular corridors ---
+            for pos in dead_ends:
+                if self.maze.count_open_passages(pos) != 1:
+                    continue  # Resolved in Phase 1
+
+                regular_candidates: list[tuple[Wall, Point]] = []
+                for side in all_directions:
+                    if side not in self.maze.get_cell(pos).walls:
+                        continue
+                    dx, dy = side.get_direction()
+                    npos = Point(pos.x + dx, pos.y + dy)
+
+                    if (
+                        self.maze.in_bounds(npos)
+                        and not self.maze.get_cell(npos).lock
+                        and not self.maze.would_create_3x3_room(pos, side)
+                    ):
+                        regular_candidates.append((side, npos))
+
+                if regular_candidates:
+                    # Sort/prefer neighbors with fewest open passages
+                    #  to avoid dense hubs
+                    regular_candidates.sort(
+                        key=lambda item: self.maze.count_open_passages(item[1])
+                    )
+                    # Pick randomly among candidates with
+                    # the lowest passage count
+                    min_deg = self.maze.count_open_passages(
+                        regular_candidates[0][1]
+                    )
+                    best_candidates = [
+                        c
+                        for c in regular_candidates
+                        if self.maze.count_open_passages(c[1]) == min_deg
+                    ]
+                    side, _ = self._rand.choice(best_candidates)
+                    self.maze.try_open_wall(pos, side)
+                    modified_any = True
+
+            # If no modifications could be safely made in an entire pass, break
             if not modified_any:
                 break
 
