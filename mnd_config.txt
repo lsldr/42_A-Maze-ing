@@ -5,4 +5,4 @@ ENTRY=1,3				# tuple x,y where x<WIDTH and y<HEIGHT
 EXIT=18,14				# like ENTRY
 OUTPUT_FILE=maze.txt
 #default: False
-PERFECT=True			# if maze should have only one path (true) or more (false)
+PERFECT=False			# if maze should have only one path (true) or more (false)

@@ -52,6 +52,21 @@ class Maze:
     def grid(self) -> list[list[Cell]]:
         return self._maze
 
+    def __str__(self) -> str:
+        """Returns the maze represented as hexadecimal characters row by row."""
+        lines = []
+        # Iterate row by row (y first, then x)
+        for y in range(self._size.y):
+            row_str = "".join(
+                str(self._maze[x][y]) for x in range(self._size.x)
+            )
+            lines.append(row_str)
+        # Append empty line and coordinates as required by the subject
+        lines.append("")
+        lines.append(f"{self.entry.x},{self.entry.y}")
+        lines.append(f"{self.exit.x},{self.exit.y}")
+        return "\n".join(lines)
+
     def in_bounds(self, pos: Point) -> bool:
         return 0 <= pos.x < self._size.x and 0 <= pos.y < self._size.y
 
@@ -82,6 +97,66 @@ class Maze:
         cell.open_wall(side)
         ncell.open_wall(side.opposite())
         return True
+
+    def count_open_passages(self, pos: Point) -> int:
+        """Returns the number of open passages for a given cell."""
+        cell = self.get_cell(pos)
+        if cell.lock:
+            return 0
+        return sum(
+            1
+            for side in [Wall.NORTH, Wall.EAST, Wall.SOUTH, Wall.WEST]
+            if side not in cell.walls
+        )
+
+    def _is_3x3_window_open(self, x0: int, y0: int) -> bool:
+        """Checks if the 3x3 block [x0, x0+2] x [y0, y0+2] has
+        all internal walls open."""
+        for x in range(x0, x0 + 3):
+            for y in range(y0, y0 + 3):
+                pos = Point(x, y)
+                if not self.in_bounds(pos) or self.get_cell(pos).lock:
+                    return False
+                # Check horizontal internal wall to the EAST
+                if x < x0 + 2 and Wall.EAST in self.get_cell(pos).walls:
+                    return False
+                # Check vertical internal wall to the SOUTH
+                if y < y0 + 2 and Wall.SOUTH in self.get_cell(pos).walls:
+                    return False
+        return True
+
+    def would_create_3x3_room(self, pos: Point, side: Wall) -> bool:
+        """Simulates opening a wall and checks if it
+        would create a 3x3 open room."""
+        dx, dy = side.get_direction()
+        npos = Point(pos.x + dx, pos.y + dy)
+        if not self.in_bounds(npos) or self.get_cell(npos).lock:
+            return False
+
+        # Temporarily open the wall
+        self.get_cell(pos).open_wall(side)
+        self.get_cell(npos).open_wall(side.opposite())
+
+        # Check all 3x3 windows covering both pos and npos
+        min_x = max(0, max(pos.x, npos.x) - 2)
+        max_x = min(self.size.x - 3, min(pos.x, npos.x))
+        min_y = max(0, max(pos.y, npos.y) - 2)
+        max_y = min(self.size.y - 3, min(pos.y, npos.y))
+
+        creates_room = False
+        for x0 in range(min_x, max_x + 1):
+            for y0 in range(min_y, max_y + 1):
+                if self._is_3x3_window_open(x0, y0):
+                    creates_room = True
+                    break
+            if creates_room:
+                break
+
+        # Revert the temporary wall opening
+        self.get_cell(pos)._walls |= side
+        self.get_cell(npos)._walls |= side.opposite()
+
+        return creates_room
 
     def is_ready(self) -> bool:
         """Check if all non-locked cells have been reached."""
