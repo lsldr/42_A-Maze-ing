@@ -168,13 +168,14 @@ def main() -> None:
         print(f"Error parsing configs with the provided filename:\n{e}")
         sys.exit()
 
-    # Build the maze from configs
+        # Build the maze from configs
     size = Point(configs["width"], configs["height"])
     entry_pos = Point(*configs["entry"])
     exit_pos = Point(*configs["exit"])
+    pattern_cells = configs.get("pattern_cells", set())
     perfect = configs.get("perfect", True)
 
-    maze = Maze(size, entry_pos, exit_pos)
+    maze = Maze(size, entry_pos, exit_pos, pattern_cells=pattern_cells)
     rng = Random()
 
     # Use the depth-first search generator
