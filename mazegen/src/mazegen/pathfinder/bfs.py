@@ -1,10 +1,10 @@
 from __future__ import annotations
-from collections import deque
-from typing import TYPE_CHECKING
 
+from collections import deque
 from mazegen.cell import Wall
 from mazegen.pathfinder.pathfinder import Pathfinder
 from mazegen.util import Point
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from mazegen.maze import Maze
@@ -31,6 +31,7 @@ class BFS_pathfinder(Pathfinder):
 
         path.append(self.maze.entry)
         path.reverse()
+        self.maze.path = path
         return path
 
     def next(self) -> tuple[bool, list[Point]]:
