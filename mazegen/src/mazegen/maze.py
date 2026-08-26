@@ -111,7 +111,10 @@ class Maze:
 
     def _is_3x3_window_open(self, x0: int, y0: int) -> bool:
         """Checks if the 3x3 block {x0..x0+2}{y0..y0+2} has
-        all internal walls open."""
+        all internal walls open.
+
+        Returns a bool indicating if for checked state of walls a 3*3
+        area would be open."""
         for x in range(x0, x0 + 3):
             for y in range(y0, y0 + 3):
                 pos = Point(x, y)
@@ -127,7 +130,10 @@ class Maze:
 
     def would_create_3x3_room(self, pos: Point, side: Wall) -> bool:
         """Simulates opening a wall and checks if it
-        would create a 3x3 open room."""
+        would create a 3x3 open room.
+
+        Returns a bool indicating if removing a given wall at a given
+        position would create a 3*3 space."""
         dx, dy = side.get_direction()
         npos = Point(pos.x + dx, pos.y + dy)
         if not self.in_bounds(npos) or self.get_cell(npos).lock:
@@ -159,7 +165,10 @@ class Maze:
         return creates_room
 
     def is_ready(self) -> bool:
-        """Check if all non-locked cells have at least 1 wall carved out."""
+        """Check if all non-locked cells have at least 1 wall carved out.
+
+        Returns a bool confirming if each cell other than locked has
+        at least 1 wall open."""
         for x in range(self._size.x):
             for y in range(self._size.y):
                 cell = self._maze[x][y]
