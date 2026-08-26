@@ -1,6 +1,14 @@
-import gui.menu as gmenu
+from enum import Enum, auto
 import gui.maze as gmaze
+import gui.menu as gmenu
 from typing import Any
+
+
+class Event(Enum):
+    NOTHING = auto()
+    MAZE_NEW_SAME = auto()
+    MAZE_NEW_RANDOM = auto()
+    MAZE_SKIP = auto()
 
 
 class Colors:
@@ -50,13 +58,9 @@ class Program:
         mlx_ptr: int,
         win_ptr: int,
         config: dict[str, Any],
-        grid: list[list[int]],
         width: int,
         height: int,
-        menu: gmenu.MainMenuPanel,
-        maze_panel: gmaze.MazeManager,
-        pause: bool = False,
-        skip: bool = False,
+        pause: bool = False
     ) -> None:
         """Class made to keep the state of the application
 
@@ -75,14 +79,14 @@ class Program:
         self._mlx_ptr = mlx_ptr
         self._win_ptr = win_ptr
         self._config = config
-        self._grid = grid
         self._width = width
         self._height = height
-        self.active_menu = menu
-        self.maze = gmaze.MazeManager()
+        self.active_menu = gmenu.MainMenuPanel()
+        self.maze_panel = gmaze.MazeManager(config)
         self.pause = pause
-        self.skip = skip
+        self.event: Event = Event.NOTHING
         self.quit = False
+        self.show_path = True
         self._colors = Colors()
 
     @property
@@ -99,15 +103,6 @@ class Program:
     def config(self) -> dict[str, Any]:
         """Parsed maze configuration dictionary"""
         return self._config
-
-    @property
-    def grid(self) -> list[list[int]]:
-        """2D grid of maze cell bitmasks"""
-        return self._grid
-
-    @grid.setter
-    def grid(self, value: list[list[int]]) -> None:
-        self._grid = value
 
     @property
     def width(self) -> int:

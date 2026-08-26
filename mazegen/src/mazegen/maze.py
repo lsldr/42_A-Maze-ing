@@ -1,12 +1,5 @@
-from __future__ import annotations
-from typing import Type, TYPE_CHECKING
-
-
 from mazegen.cell import Cell, Wall
 from mazegen.util import Point
-
-if TYPE_CHECKING:
-    from mazegen.pathfinder.pathfinder import Pathfinder
 
 
 class MazeError(Exception):
@@ -30,7 +23,7 @@ class Maze:
         self._entry = entry
         self._exit = exit
         self._maze = [[Cell() for _ in range(size.y)] for _ in range(size.x)]
-        self._path: list[Point] = []  # To hold the shortest path
+        self.path: list[Point] = []  # To hold the shortest path
 
         # Store pattern cells and lock them
         self._pattern_cells: set[Point] = {
@@ -60,10 +53,6 @@ class Maze:
     def grid(self) -> list[list[Cell]]:
         return self._maze
 
-    @property
-    def path(self) -> list[Point]:
-        return self._path
-
     def __str__(self) -> str:
         """Returns the maze represented as hex chars row by row."""
         lines = []
@@ -77,7 +66,7 @@ class Maze:
         lines.append("")
         lines.append(f"{self.entry.x},{self.entry.y}")
         lines.append(f"{self.exit.x},{self.exit.y}")
-        lines.append(f"{self.path_to_directions(self._path)}")
+        lines.append(f"{self.path_to_directions(self.path)}")
         return "\n".join(lines)
 
     def in_bounds(self, pos: Point) -> bool:
@@ -191,17 +180,8 @@ class Maze:
                     return False
         return True
 
-    def solve(self, solver_cls: Type[Pathfinder] | None = None) -> list[Point]:
-        """Solves the maze using the given pathfinder class (default: BFS)."""
-        if solver_cls is None:
-            from mazegen.pathfinder.bfs import BFS_pathfinder
-
-            solver_cls = BFS_pathfinder
-        solver = solver_cls(self)
-        self._path = solver.finish()
-        return self._path
-
-    def path_to_directions(self, path: list[Point]) -> str:
+    @staticmethod
+    def path_to_directions(path: list[Point]) -> str:
         """Converts a coordinate path into cardinal direction letters
         (N, E, S, W) as required by the output file format."""
         if len(path) < 2:

@@ -1,16 +1,14 @@
+from mazegen import Point
 from pathlib import Path
-from typing import Any, Dict, Set
-from mazegen.util import Point
+from typing import Any
 
 
 class ConfigError(Exception):
     """Custom exception raised for in
     valid configuration files."""
 
-    pass
 
-
-def parse_config(file_path_str: str) -> Dict[str, Any]:
+def parse_config(file_path_str: str) -> dict[str, Any]:
     """Parse and validate a maze configuration file.
 
     Checks relative to CWD first, then relative to the script's directory.
@@ -23,8 +21,8 @@ def parse_config(file_path_str: str) -> Dict[str, Any]:
         if not path.is_file():
             raise FileNotFoundError(f"Config file not found: {file_path_str}")
 
-    seen_keys: Set[str] = set()
-    raw_config: Dict[str, str] = {}
+    seen_keys: set[str] = set()
+    raw_config: dict[str, str] = {}
 
     with path.open("r", encoding="utf-8") as file:
         #  open() returns an iterable AND iterator file object that we can
@@ -130,8 +128,8 @@ def parse_config(file_path_str: str) -> Dict[str, Any]:
     return {
         "width": width,
         "height": height,
-        "entry": (entry_x, entry_y),
-        "exit": (exit_x, exit_y),
+        "entry": Point(entry_x, entry_y),
+        "exit": Point(exit_x, exit_y),
         "output_file": raw_config["OUTPUT_FILE"],
         "perfect": perfect,
         "pattern_cells": pattern_cells,

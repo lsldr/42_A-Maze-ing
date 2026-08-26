@@ -1,21 +1,10 @@
 import sys
-from random import Random
-from mazegen import (
-    parse_config,
-    ConfigError,
-    Maze,
-    Point,
-    DFS_gen,
-)
-
-from gui.maze import MazeManager
-from gui.menu import MainMenuPanel
+import time
 from gui.program import Program
+from input_parser import ConfigError, parse_config
 from mlx import Mlx
 from PIL import Image
-
 from typing import Any
-import time
 
 
 def loop_callback(prog: Program) -> None:
@@ -44,8 +33,8 @@ def loop_callback(prog: Program) -> None:
     maze_ptr = mlx.mlx_new_image(prog.mlx_ptr, maze_width, maze_height)
     maze_data, _, _, _ = mlx.mlx_get_data_addr(maze_ptr)
     maze = Image.new("RGBA", (maze_width, maze_height), 0xFFDDDDDD)
-    prog.maze.tick(prog)
-    prog.maze.draw(maze, prog)
+    prog.maze_panel.tick(prog)
+    prog.maze_panel.draw(maze, prog)
 
     maze_data[:] = maze.tobytes()
     mlx.mlx_clear_window(prog.mlx_ptr, prog.win_ptr)
@@ -95,7 +84,7 @@ def close_callback(prog: Program) -> None:
     Mlx().mlx_loop_exit(prog.mlx_ptr)
 
 
-def run(config: dict[str, Any], grid: list[list[int]]) -> None:
+def run(config: dict[str, Any]) -> None:
     """Configure and start the application
 
     Creates window and start main application loop
@@ -110,13 +99,13 @@ def run(config: dict[str, Any], grid: list[list[int]]) -> None:
     win_ptr = None
     try:
         mlx_obj = Mlx()
-        mlx_ptr: int | None = mlx_obj.mlx_init()
+        mlx_ptr = mlx_obj.mlx_init()
         if not mlx_ptr:
             raise RuntimeError(
                 "Failed to initialize MiniLibX (mlx_init returned NULL). "
                 "Ensure your DISPLAY environment variable is set."
             )
-        win_ptr: int | None = mlx_obj.mlx_new_window(
+        win_ptr = mlx_obj.mlx_new_window(
             mlx_ptr, width, height, title
         )
         if not win_ptr:
@@ -125,18 +114,12 @@ def run(config: dict[str, Any], grid: list[list[int]]) -> None:
                 "(mlx_new_window returned NULL)."
             )
 
-        main_menu = MainMenuPanel()
-        maze_panel = MazeManager()
-
         prog = Program(
             mlx_ptr,
             win_ptr,
             config,
-            grid,
             width,
             height,
-            main_menu,
-            maze_panel,
         )
         mlx_obj.mlx_key_hook(win_ptr, keys_callback, prog)
         mlx_obj.mlx_expose_hook(win_ptr, expose_callback, prog)
@@ -167,32 +150,7 @@ def main() -> None:
         print(f"Error parsing configs with the provided filename:\n{e}")
         sys.exit()
 
-        # Build the maze from configs
-    size = Point(configs["width"], configs["height"])
-    entry_pos = Point(*configs["entry"])
-    exit_pos = Point(*configs["exit"])
-    pattern_cells = configs.get("pattern_cells", set())
-    perfect = configs.get("perfect", True)
-
-    maze = Maze(size, entry_pos, exit_pos, pattern_cells=pattern_cells)
-    rng = Random()
-
-    # Use the depth-first search generator
-    dfs_generator = DFS_gen(maze, rng, perfect=perfect)
-    dfs_generator.finish()
-
-    # After generating the maze, solve for the entry-exit pair
-    # Default algo is Breadth-First Search (BFS)
-    path = maze.solve()
-
-    # Convert to a string of directions
-    directions = maze.path_to_directions(path)
-
-    # Print to check the maze
-    print("\n--- Generated Maze ---")
-    print(maze)
-    print("----------------------\n")
-    run(configs, maze.grid)
+    run(configs)
 
 
 if __name__ == "__main__":

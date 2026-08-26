@@ -1,5 +1,7 @@
 import random
 from enum import IntFlag
+from mazegen import Point
+from typing import Any
 
 
 class Wall(IntFlag):
@@ -45,9 +47,9 @@ def add_loops(
     grid: list[list[int]],
     width: int,
     height: int,
-    pattern_42: set,
+    pattern_42: set[Point],
     loop_factor: float = 0.05,
-):
+) -> None:
     """Randomly knocks down a small percentage of
     the remaining walls to create multiple paths."""
     extra_walls_to_remove = int(width * height * loop_factor)
@@ -63,7 +65,7 @@ def add_loops(
             grid[ny][nx] &= ~n_wall
 
 
-def dfs_maze_gen(configs: dict) -> list[list[int]]:
+def dfs_maze_gen(configs: dict[str, Any]) -> list[list[int]]:
     width = configs["width"]
     height = configs["height"]
     entry = configs["entry"]
