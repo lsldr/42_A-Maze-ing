@@ -32,7 +32,7 @@ def loop_callback(prog: Program) -> None:
     # 2. Draw maze
     maze_ptr = mlx.mlx_new_image(prog.mlx_ptr, maze_width, maze_height)
     maze_data, _, _, _ = mlx.mlx_get_data_addr(maze_ptr)
-    maze = Image.new("RGBA", (maze_width, maze_height), 0xFFDDDDDD)
+    maze = Image.new("RGBA", (maze_width, maze_height))
     prog.maze_panel.tick(prog)
     prog.maze_panel.draw(maze, prog)
 
