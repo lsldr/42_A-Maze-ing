@@ -30,6 +30,24 @@ class BFS_pathfinder(Pathfinder):
         return path
 
     def next(self) -> tuple[bool, list[Point]]:
+        """After popping (with deque.popleft()) it from the queue, looks
+        at the current cell's neighbors that are reachable, then adds them
+        all to the queue (deque list), visited (set), parent(dict to backtrack)
+        and explored (list for visualization purposes). In each call,
+        continues to do this for current cells, gradually looking for
+        closes neighbor cells first and continuing. Over time, the explored
+        branches that did not lead to exit are all out of queue.
+        Whenever the current reaches exit, this means that the shortest path
+        to exit from entry is reached (since shortest ways are explored first),
+        so the backtracking method is called to build the path (list[Point])
+        to be returned from the class.
+
+
+        Returns a tuple with a bool indicating if the path was found
+        and a list explored paths in order of exploration. Walls are
+        searched starting from the North and clockwise as of the current
+        version."""
+
         all_sides = [Wall.NORTH, Wall.EAST, Wall.SOUTH, Wall.WEST]
         if self._done or not self._queue:
             self._done = True
