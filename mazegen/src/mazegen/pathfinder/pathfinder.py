@@ -1,6 +1,11 @@
+from __future__ import annotations
 from abc import ABC, abstractmethod
-from mazegen.maze import Maze
+from typing import TYPE_CHECKING
+
 from mazegen.util import Point
+
+if TYPE_CHECKING:
+    from mazegen.maze import Maze
 
 
 class Pathfinder(ABC):

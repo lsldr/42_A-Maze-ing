@@ -6,7 +6,6 @@ from mazegen import (
     Maze,
     Point,
     DFS_gen,
-    BFS_pathfinder,
 )
 
 from gui.maze import MazeManager
@@ -181,6 +180,13 @@ def main() -> None:
     # Use the depth-first search generator
     dfs_generator = DFS_gen(maze, rng, perfect=perfect)
     dfs_generator.finish()
+
+    # After generating the maze, solve for the entry-exit pair
+    # Default algo is Breadth-First Search (BFS)
+    path = maze.solve()
+
+    # Convert to a string of directions
+    directions = maze.path_to_directions(path)
 
     # Print to check the maze
     print("\n--- Generated Maze ---")

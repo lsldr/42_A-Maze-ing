@@ -1,9 +1,13 @@
-from mazegen.maze import Maze
+from __future__ import annotations
+from collections import deque
+from typing import TYPE_CHECKING
+
+from mazegen.cell import Wall
 from mazegen.pathfinder.pathfinder import Pathfinder
 from mazegen.util import Point
-from mazegen.cell import Wall
 
-from collections import deque
+if TYPE_CHECKING:
+    from mazegen.maze import Maze
 
 
 class BFS_pathfinder(Pathfinder):
@@ -63,7 +67,7 @@ class BFS_pathfinder(Pathfinder):
 
         c_cell = self.maze.get_cell(current)
         for side in all_sides:
-            if side not in c_cell.wall:
+            if side not in c_cell.walls:
                 dx, dy = side.get_direction()
                 npos = Point(current.x + dx, current.y + dy)
 
