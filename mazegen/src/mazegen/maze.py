@@ -1,11 +1,5 @@
-from __future__ import annotations
-
 from mazegen.cell import Cell, Wall
 from mazegen.util import Point
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from mazegen.pathfinder.pathfinder import Pathfinder
 
 
 class MazeError(Exception):

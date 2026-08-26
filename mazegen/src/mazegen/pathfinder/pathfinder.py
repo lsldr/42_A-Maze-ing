@@ -1,8 +1,8 @@
 from __future__ import annotations
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
 
+from abc import ABC, abstractmethod
 from mazegen.util import Point
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from mazegen.maze import Maze
@@ -30,7 +30,6 @@ class Pathfinder(ABC):
             bool: True if pathfinding finished, False otherwise.
             list[Point]: List of explored/checked spaces for visualization.
         """
-        pass
 
     def finish(self) -> list[Point]:
         """Run pathfinding to completion and return the path."""

@@ -165,5 +165,5 @@ class Maze_Generator(ABC):
             ready maze
         """
         while not self.maze.is_ready():
-           self.next()
+            self.next()
         return self.maze

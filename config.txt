@@ -1,11 +1,11 @@
 #required by project file (this are mandatory)
-WIDTH=20				# int
-HEIGHT=15				# int
-ENTRY=0,0				# tuple x,y where x<WIDTH and y<HEIGHT
-EXIT=19,14				# like ENTRY
+WIDTH=50				# int
+HEIGHT=50				# int
+ENTRY=1,3				# tuple x,y where x<WIDTH and y<HEIGHT
+EXIT=45,42				# like ENTRY
 OUTPUT_FILE=maze.txt
 #default: False
-PERFECT=True			# if maze should have only one path (true) or more (false)
+PERFECT=False			# if maze should have only one path (true) or more (false)
 
 # my additions (optional, can change, for now just ideas)
 
@@ -17,9 +17,9 @@ PERFECT=True			# if maze should have only one path (true) or more (false)
 # algorithm for maze gen
 # avalible: randomdfs
 # default: randomdfs
-MAZEGEN=randomdfs
+# MAZEGEN=randomdfs
 
 # pathfinding algorithm
 # avalible: bfs
 # default: bfs
-PATHFINDING= bfs
+# PATHFINDING= bfs

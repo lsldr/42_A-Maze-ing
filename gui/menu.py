@@ -1,6 +1,5 @@
 from gui import program
-from PIL import Image
-from PIL import ImageDraw
+from PIL import Image, ImageDraw
 
 
 class MainMenuPanel:
@@ -35,23 +34,23 @@ class MainMenuPanel:
             state (State): state object of the program
         """
         match key:
-            case 32: # space start/pause
+            case 32:  # space start/pause
                 prog.pause = not prog.pause
-            case 99: # c change 42 color
+            case 99:  # c change 42 color
                 prog.colors.emblem_next()
-            case 100: # d show/hide path
+            case 100:  # d show/hide path
                 prog.show_path = not prog.show_path
-            case 109: # m new maze same seed
+            case 109:  # m new maze same seed
                 prog.event = program.Event.MAZE_NEW_SAME
-            case 110: # n new maze new seed
+            case 110:  # n new maze new seed
                 prog.event = program.Event.MAZE_NEW_RANDOM
-            case 112: # p skip maze anim
+            case 112:  # p skip maze anim
                 prog.event = program.Event.MAZE_SKIP
-            case 113:
+            case 113:  # x: exit program
                 prog.quit = True
-            case 118: # v change path color
+            case 118:  # v change path color
                 prog.colors.path_next()
-            case 120: # x change maze color
+            case 120:  # x change maze color
                 prog.colors.maze_next()
 
     def draw(self, img: Image.Image) -> None:

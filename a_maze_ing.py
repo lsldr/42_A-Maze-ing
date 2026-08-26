@@ -99,13 +99,13 @@ def run(config: dict[str, Any]) -> None:
     win_ptr = None
     try:
         mlx_obj = Mlx()
-        mlx_ptr: int | None = mlx_obj.mlx_init()
+        mlx_ptr = mlx_obj.mlx_init()
         if not mlx_ptr:
             raise RuntimeError(
                 "Failed to initialize MiniLibX (mlx_init returned NULL). "
                 "Ensure your DISPLAY environment variable is set."
             )
-        win_ptr: int | None = mlx_obj.mlx_new_window(
+        win_ptr = mlx_obj.mlx_new_window(
             mlx_ptr, width, height, title
         )
         if not win_ptr:

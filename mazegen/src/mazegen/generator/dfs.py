@@ -13,9 +13,11 @@ class DFS_gen(Maze_Generator):
         self._visited: set[Point] = set(self.maze.pattern_cells)
 
     def next(self) -> tuple[Maze, Point | None, list[Point] | None]:
-        # 1. Initialize DFS from Entry
+        # 1. Initialize DFS from random point
         if not self._stack and self.maze.entry not in self._visited:
-            pos = self.maze.entry
+            randx = self._rand.randrange(self.maze.size.x)
+            randy = self._rand.randrange(self.maze.size.y)
+            pos = Point(randx, randy)
             self._visited.add(pos)
             self.maze.get_cell(pos).visited = True
             self._stack.append(pos)

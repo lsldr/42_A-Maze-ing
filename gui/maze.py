@@ -30,7 +30,7 @@ class MazeManager:
         self._mazegen = gen(self._maze, self._rand, config["perfect"])
         self._pathfind = solv(self._maze)
         self._state = self.State.MAZEGEN
-        self._first_maze = True # first maze will be outputed to file
+        self._first_maze = True  # only first maze will be written to file
         self._maze_gen_stack: list[Point] | None = None
         self._maze_gen_last: Point | None = None
         self._path_stack: list[Point] | None = None
@@ -50,7 +50,7 @@ class MazeManager:
             with open(file, "w") as f:
                 f.write(str(self._maze))
         except PermissionError:
-            print("Error while writing to file")
+            print("Error while writing to file: Access denied")
         self._first_maze = False
 
     def tick(self, prog: gp.Program) -> None:
@@ -138,9 +138,9 @@ class MazeManager:
                 y1 = int((y + 1) * cell_h)
 
                 if (self._maze_gen_stack and
-                    Point(x, y) in self._maze_gen_stack):
-                        canvas.rectangle(
-                            [(x0, y0), (x1, y1)], fill="#BBB"
+                        Point(x, y) in self._maze_gen_stack):
+                    canvas.rectangle(
+                        [(x0, y0), (x1, y1)], fill="#BBB"
                         )  # darken
                 if self._maze_gen_last == Point(x, y):
                     canvas.rectangle(
@@ -156,7 +156,7 @@ class MazeManager:
             off_w = cell_w / 2
             off_h = cell_h / 2
             path = [(x * cell_w + off_w, y * cell_h + off_h) for
-                x, y in self._maze.path]
+                    x, y in self._maze.path]
             canvas.line(path,
                         prog.colors.path, round(min(cell_h, cell_w) // 2),
                         "curve")
@@ -184,7 +184,7 @@ class MazeManager:
         for x in range(width_cells):
             for y in range(height_cells):
                 # prog.grid is list[list[Cell]] indexed by [x][y]
-                cell = self._maze.get_cell(Point(x,y))
+                cell = self._maze.get_cell(Point(x, y))
                 walls = cell.walls
 
                 x0 = int(x * cell_w)

@@ -1,4 +1,4 @@
-from .pathfinder import Pathfinder
 from .bfs import BFS_pathfinder
+from .pathfinder import Pathfinder
 
-__all__ = ["Pathfinder", "BFS_pathfinder"]
+__all__ = ["BFS_pathfinder", "Pathfinder"]
