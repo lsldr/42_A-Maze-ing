@@ -39,7 +39,7 @@ from enum import IntFlag
 from functools import cached_property
 from typing import Dict, FrozenSet, Iterator, List, Optional, Set, Tuple
 
-Cell = Tuple[int, int]                 # an immutable (row, col) position
+Cell = Tuple[int, int]  # an immutable (row, col) position
 
 
 class Direction(IntFlag):
@@ -98,8 +98,12 @@ class Maze:
     whose edges are the open passages between adjacent cells.
     """
 
-    def __init__(self, grid: List[List[int]], entry: Optional[Cell],
-                 exit: Optional[Cell]) -> None:
+    def __init__(
+        self,
+        grid: List[List[int]],
+        entry: Optional[Cell],
+        exit: Optional[Cell],
+    ) -> None:
         self.grid = grid
         self.entry = entry
         self.exit = exit
@@ -181,8 +185,9 @@ class Maze:
         other = self.neighbour(cell, side)
         if other not in self:
             return False
-        return not (self.walls(cell) & side) \
-            and not (self.walls(other) & side.opposite)
+        return not (self.walls(cell) & side) and not (
+            self.walls(other) & side.opposite
+        )
 
     def passages(self, cell: Cell) -> Iterator[Cell]:
         """Yield the neighbours *cell* shares an open passage with."""
@@ -419,8 +424,8 @@ def verdict(report: MazeReport, min_loops: int, max_dead_ends: int) -> str:
         )
     extra = (
         "no real dead-end -> bonus-grade (perfectly braided)"
-        if real_dead_ends == 0 else
-        f"{real_dead_ends} real dead-end(s) within tolerance "
+        if real_dead_ends == 0
+        else f"{real_dead_ends} real dead-end(s) within tolerance "
         f"(0 would be bonus-grade)"
     )
     return (
@@ -439,8 +444,10 @@ def render(report: MazeReport, min_loops: int, max_dead_ends: int) -> str:
         f"Entry            : {_xy(report.entry)}   Exit: {_exit(report)}",
     ]
     if not report.entry_from_footer:
-        lines.append("                   (no valid entry in footer; using the "
-                     "largest reachable region)")
+        lines.append(
+            "                   (no valid entry in footer; using the "
+            "largest reachable region)"
+        )
     lines += [
         f"Reachable region : {len(report.region)} cells "
         f"({report.disconnected_corridors} corridor(s) unreachable)",
@@ -465,7 +472,8 @@ def _exit(report: MazeReport) -> str:
     if report.maze.exit is None:
         return "?"
     states: Dict[Optional[bool], str] = {
-        True: " (reachable)", False: " (UNREACHABLE)",
+        True: " (reachable)",
+        False: " (UNREACHABLE)",
     }
     state = states.get(report.exit_reachable, "")
     return f"{_xy(report.maze.exit)}{state}"
@@ -491,19 +499,24 @@ def _coherence(cells: Tuple[Cell, ...]) -> str:
 def parse_args(argv: List[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Analyze an a_maze_ing output file: wall coherence and "
-                    "whether the maze is perfect or a playable Pac-Man board.",
+        "whether the maze is perfect or a playable Pac-Man board.",
     )
     parser.add_argument("output_file", help="maze output file to analyze")
     parser.add_argument(
-        "--min-loops", type=int, default=DEFAULT_MIN_LOOPS, metavar="N",
+        "--min-loops",
+        type=int,
+        default=DEFAULT_MIN_LOOPS,
+        metavar="N",
         help="independent routes a playable (non-perfect) maze must keep "
-             "(default: %(default)s)",
+        "(default: %(default)s)",
     )
     parser.add_argument(
-        "--max-dead-ends", type=int, default=DEFAULT_MAX_DEAD_ENDS,
+        "--max-dead-ends",
+        type=int,
+        default=DEFAULT_MAX_DEAD_ENDS,
         metavar="N",
         help="real dead-ends tolerated; use 0 for the no-dead-end bonus "
-             "(default: %(default)s)",
+        "(default: %(default)s)",
     )
     return parser.parse_args(argv)
 
@@ -528,6 +541,6 @@ if __name__ == "__main__":
         sys.exit(main(sys.argv[1:]))
     except KeyboardInterrupt:
         sys.exit(130)
-    except Exception as error:        # stay safe on any unexpected input
+    except Exception as error:  # stay safe on any unexpected input
         print(f"Unexpected error while analyzing the maze: {error}")
         sys.exit(EXIT_MALFORMED)
