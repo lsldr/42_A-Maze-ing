@@ -1,6 +1,4 @@
-import functools
 from mazegen import Wall
-from collections import deque
 from mazegen.generator import MazeGenerator
 from mazegen.maze import Maze
 from mazegen.util import Point
