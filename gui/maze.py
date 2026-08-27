@@ -1,4 +1,6 @@
 import gui.program as gp
+import PIL.Image
+import PIL.ImageOps
 from enum import Enum, auto
 from mazegen import BFS_pathfinder, DFS_gen, Maze, Maze_Generator, Pathfinder
 from mazegen.cell import Wall
@@ -114,15 +116,21 @@ class MazeManager:
                 case self.State.DONE:
                     self._output_first(prog.config["output_file"])
 
+        if prog.quit:
+            self._output_first(prog.config["output_file"])
+
     def draw(self, img: Image, prog: gp.Program) -> None:
-        canvas = ImageDraw(img)
         width_cells: int = prog.config["width"]
         height_cells: int = prog.config["height"]
         entry: Point = prog.config["entry"]
         exit_pos: Point = prog.config["exit"]
         pattern: set[tuple[int, int]] = prog.config.get("pattern_cells", set())
 
-        img_w, img_h = img.size
+        tmp_img = PIL.Image.new("RGBA",
+                                (width_cells * 32, height_cells * 32), "#DDD")
+        canvas = ImageDraw(tmp_img)
+
+        img_w, img_h = tmp_img.size
         cell_w = img_w / width_cells
         cell_h = img_h / height_cells
 
@@ -192,11 +200,16 @@ class MazeManager:
                 x1 = int((x + 1) * cell_w)
                 y1 = int((y + 1) * cell_h)
 
-                if Wall.NORTH in walls:
+                if cell.visited and Wall.NORTH in walls:
                     canvas.line([(x0, y0), (x1, y0)], fill=wall_color, width=2)
-                if Wall.SOUTH in walls:
+                if cell.visited and Wall.SOUTH in walls:
                     canvas.line([(x0, y1), (x1, y1)], fill=wall_color, width=2)
-                if Wall.WEST in walls:
+                if cell.visited and Wall.WEST in walls:
                     canvas.line([(x0, y0), (x0, y1)], fill=wall_color, width=2)
-                if Wall.EAST in walls:
+                if cell.visited and Wall.EAST in walls:
                     canvas.line([(x1, y0), (x1, y1)], fill=wall_color, width=2)
+
+        tmp_img = PIL.ImageOps.contain(tmp_img, img.size)
+        offset = ((img.size[0] - tmp_img.size[0]) // 2,
+                  (img.size[1] - tmp_img.size[1]) // 2)
+        img.paste(tmp_img, offset)
