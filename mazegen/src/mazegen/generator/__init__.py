@@ -1,4 +1,5 @@
-from .dfs import DFS_gen
-from .maze_generator import Maze_Generator
+from .dfs import DFSGen
+from .maze_generator import MazeGenerator
+from .wilsons import WilsonsGen
 
-__all__ = ["DFS_gen", "Maze_Generator"]
+__all__ = ["DFSGen", "MazeGenerator", "WilsonsGen"]

@@ -5,7 +5,7 @@ from mazegen.util import Point
 from random import Random
 
 
-class Maze_Generator(ABC):
+class MazeGenerator(ABC):
     def __init__(
         self, maze: Maze, rand: Random, perfect: bool = False
     ) -> None:
@@ -166,4 +166,7 @@ class Maze_Generator(ABC):
         """
         while not self.maze.is_ready():
             self.next()
+
+        if not self._perfect:
+            self._braid_maze()
         return self.maze
