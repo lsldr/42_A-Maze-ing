@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from mazegen.maze import Maze
 
 
-class BFS_pathfinder(Pathfinder):
+class BFSPathfinder(Pathfinder):
     def __init__(self, maze: Maze) -> None:
         super().__init__(maze)
         self._queue: deque[Point] = deque([self.maze.entry])

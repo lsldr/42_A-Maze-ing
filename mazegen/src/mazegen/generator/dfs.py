@@ -1,11 +1,11 @@
 from mazegen.cell import Wall
-from mazegen.generator.maze_generator import Maze_Generator
+from mazegen.generator.maze_generator import MazeGenerator
 from mazegen.maze import Maze
 from mazegen.util import Point
 from random import Random
 
 
-class DFS_gen(Maze_Generator):
+class DFSGen(MazeGenerator):
     def __init__(self, maze: Maze, rand: Random, perfect: bool = True) -> None:
         super().__init__(maze, rand, perfect)
         self._stack: list[Point] = []

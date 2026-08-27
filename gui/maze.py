@@ -2,7 +2,13 @@ import gui.program as gp
 import PIL.Image
 import PIL.ImageOps
 from enum import Enum, auto
-from mazegen import BFS_pathfinder, DFS_gen, Maze, Maze_Generator, Pathfinder
+from mazegen import (
+    BFSPathfinder,
+    Maze,
+    MazeGenerator,
+    Pathfinder,
+    WilsonsGen,
+)
 from mazegen.cell import Wall
 from mazegen.util import Point
 from PIL.Image import Image
@@ -37,13 +43,15 @@ class MazeManager:
         self._maze_gen_last: Point | None = None
         self._path_stack: list[Point] | None = None
 
-    def _get_maze_gen(self, config: dict[str, Any]) -> type[Maze_Generator]:
-        return DFS_gen
+    def _get_maze_gen(self, config: dict[str, Any]) -> type[MazeGenerator]:
+        #return DFSGen
+        return WilsonsGen
 
     def _get_path_solv(self, config: dict[str, Any]) -> type[Pathfinder]:
-        return BFS_pathfinder
+        return BFSPathfinder
 
     def _output_first(self, file: str) -> None:
+        return
         if not self._first_maze:
             return
         self._mazegen.finish()
