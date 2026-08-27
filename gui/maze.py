@@ -51,7 +51,6 @@ class MazeManager:
         return BFSPathfinder
 
     def _output_first(self, file: str) -> None:
-        return
         if not self._first_maze:
             return
         self._mazegen.finish()

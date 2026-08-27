@@ -1,6 +1,6 @@
-from enum import Enum, auto
 import gui.maze as gmaze
 import gui.menu as gmenu
+from enum import Enum, auto
 from typing import Any
 
 

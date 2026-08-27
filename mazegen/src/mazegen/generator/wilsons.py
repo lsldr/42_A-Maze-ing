@@ -1,6 +1,4 @@
-import functools
 from mazegen import Wall
-from collections import deque
 from mazegen.generator import MazeGenerator
 from mazegen.maze import Maze
 from mazegen.util import Point
@@ -14,10 +12,10 @@ class WilsonsGen(MazeGenerator):
         super().__init__(maze, rand, perfect)
         self._avalible = {Point(x, y) for x in range(maze.size.x)
              for y in range(maze.size.y)}
+        self._avalible.difference_update(self.maze.pattern_cells)
         pos = rand.choice(list(self._avalible))
         maze.get_cell(pos).visited = True
         self._avalible.discard(pos)
-        self._avalible.difference_update(self.maze.pattern_cells)
         self._path: list[Point] = []
 
     def next(self) -> tuple[Maze, Point | None, list[Point] | None]:
@@ -40,13 +38,11 @@ class WilsonsGen(MazeGenerator):
 
         next = self._rand.choice(neighbors)
 
-        # next created a loop keep first
+        # next created a loop
         if next in self._path:
-            first = self._path[0]
             while self._path.pop() != next:
                 pass
-            if len(self._path) == 0:
-                self._path.append(first)
+            self._path.append(next)
             return self.maze, self._path[0], self._path.copy()
 
         # next is previously visited path

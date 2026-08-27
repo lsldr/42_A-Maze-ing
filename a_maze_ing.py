@@ -48,7 +48,6 @@ def loop_callback(prog: Program) -> None:
     mlx.mlx_destroy_image(prog.mlx_ptr, menu_ptr)
     mlx.mlx_destroy_image(prog.mlx_ptr, maze_ptr)
     if prog.quit:
-        print(prog.mlx_ptr)
         mlx.mlx_loop_exit(prog.mlx_ptr)
     timeend = time.perf_counter()
     time.sleep(max(0, 0.016 - (timeend - timestart)))  # Around ~60 FPS
