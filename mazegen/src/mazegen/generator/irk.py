@@ -13,7 +13,7 @@ class IRK_Gen(MazeGenerator):
         super().__init__(maze, rand, perfect)
         self._walls_list = self.make_wall_list()
         self._cells_dset = self.get_cell_dset()
-        self._cells_stack = list[Point]
+        self._cells_stack: list[Point] = []
 
     def make_wall_list(self) -> list[tuple[Point, Wall]]:
         """Create a list with tuples containing points in grid bounds
