@@ -105,9 +105,7 @@ def run(config: dict[str, Any]) -> None:
                 "Failed to initialize MiniLibX (mlx_init returned NULL). "
                 "Ensure your DISPLAY environment variable is set."
             )
-        win_ptr = mlx_obj.mlx_new_window(
-            mlx_ptr, width, height, title
-        )
+        win_ptr = mlx_obj.mlx_new_window(mlx_ptr, width, height, title)
         if not win_ptr:
             raise RuntimeError(
                 "Failed to create MiniLibX window "
