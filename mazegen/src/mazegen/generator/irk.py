@@ -27,32 +27,48 @@ class IRK_Gen(Maze_Generator):
 
         wall_list: list[tuple[Point, Wall]] = []
 
-        x_size = self.maze.size.x
-        y_size = self.maze.size.y
-        for x in range(x_size):
-            for y in range(y_size):
-                p = Point(x, y)
-                if not self.maze.grid[p.x][p.y].lock:
-                    for w in [Wall.EAST, Wall.SOUTH]:
-                        if (
-                            x == x_size - 1
-                            and w == Wall.EAST
-                            or y == y_size - 1
-                            and w == Wall.SOUTH
-                        ):
-                            continue
-                        wall_list.append(tuple(Point(x, y), w))
+        for x in range(self.maze.size.x):
+            for y in range(self.maze.size.y):
+                point = Point(x, y)
 
+                for side in (Wall.EAST, Wall.SOUTH):
+                    dx, dy = side.get_direction()
+                    neighbor = Point(x + dx, y + dy)
+
+                    if (
+                        self.maze.in_bounds(neighbor)
+                        and not self.maze.get_cell(point).lock
+                        and not self.maze.get_cell(neighbor).lock
+                    ):
+                        wall_list.append((point, side))
+
+        self._rand.shuffle(wall_list)
         return wall_list
 
     def get_cell_dset(self) -> DisjointSet:
+        """Creates a disjoint set of all the cells that are not locked.
+        A disjoint set is an array of sets that do not share any elements.
+        When a union method is used on it, the two sets passed as parameters
+        (initally, each set's representing element (like a dict key) is the
+        single element contained in it) are made into 1 set where the
+        representing element is chosen as the second parameter's value.
+        The method to check if two elemenets are in the same set just compares
+        those two elements' representing element.
 
-        cells_dset = DisjointSet(
-            [
-                {i: c}
-                for i in range(self.maze.size.x * self.maze.size.y)
-                for c in [point for point in self.maze.grid]
-            ]
-        )
+        Parameters:
+        Instance of the IRK_Gen class (self)
 
-        return cells_dset
+        Returns:
+        A disjoint set collection with each set containing unlocked cells."""
+
+        maze_grid = self.maze.grid
+        maze_size = self.maze.size
+
+        points_list = [
+            Point(x, y)
+            for x in range(maze_size.x)
+            for y in range(maze_size.y)
+            if not maze_grid[x][y].lock
+        ]
+
+        return DisjointSet.from_iterable(points_list)
