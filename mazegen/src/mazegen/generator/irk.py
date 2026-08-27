@@ -1,18 +1,19 @@
 from mazegen.cell import Wall
-from mazegen.generator.maze_generator import Maze_Generator
+from .maze_generator import MazeGenerator
 from mazegen.maze import Maze
 from mazegen.util import Point
 from random import Random
 from disjoint_set import DisjointSet
 
 
-class IRK_Gen(Maze_Generator):
+class IRK_Gen(MazeGenerator):
     def __init__(
         self, maze: Maze, rand: Random, perfect: bool = False
     ) -> None:
         super().__init__(maze, rand, perfect)
         self._walls_list = self.make_wall_list()
         self._cells_dset = self.get_cell_dset()
+        self._cells_stack = list[Point]
 
     def make_wall_list(self) -> list[tuple[Point, Wall]]:
         """Create a list with tuples containing points in grid bounds
@@ -72,3 +73,24 @@ class IRK_Gen(Maze_Generator):
         ]
 
         return DisjointSet.from_iterable(points_list)
+
+    def next(self) -> tuple[Maze, Point | None, list[Point] | None]:
+        if not self._walls_list:
+            return self.maze, None, self._cells_stack
+
+        c_cell, c_wall = self._walls_list.pop()
+        cx, cy = c_cell.x, c_cell.y
+
+        dir = c_wall.get_direction()
+        dx, dy = dir.x, dir.y
+        n_cell = Point(cx + dx, cy + dy)
+
+        self._cells_stack.append(c_cell)
+
+        if self._cells_dset.connected(c_cell, n_cell):
+            return (self.maze, c_cell, self._cells_stack)
+
+        if self.maze.try_open_wall(c_cell, c_wall):
+            self._cells_dset.union(c_cell, n_cell)
+
+        return self.maze, c_cell, self._cells_stack

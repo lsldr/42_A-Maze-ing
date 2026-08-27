@@ -33,6 +33,7 @@ class MazeGenerator(ABC):
             (x, y): optional position of the last checked cell
             optional stack of positions
         """
+        ...
 
     def _braid_maze(self) -> None:
         """Eliminates dead ends while preventing 3x3 open areas
