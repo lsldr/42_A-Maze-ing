@@ -10,8 +10,9 @@ class WilsonsGen(MazeGenerator):
         self, maze: Maze, rand: Random, perfect: bool = False
     ) -> None:
         super().__init__(maze, rand, perfect)
-        self._avalible = {Point(x, y) for x in range(maze.size.x)
-             for y in range(maze.size.y)}
+        self._avalible = {
+            Point(x, y) for x in range(maze.size.x) for y in range(maze.size.y)
+        }
         self._avalible.difference_update(self.maze.pattern_cells)
         pos = rand.choice(list(self._avalible))
         maze.get_cell(pos).visited = True

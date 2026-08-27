@@ -7,6 +7,7 @@ from disjoint_set import DisjointSet
 
 
 class IRK_Gen(MazeGenerator):
+
     def __init__(
         self, maze: Maze, rand: Random, perfect: bool = False
     ) -> None:
@@ -72,6 +73,8 @@ class IRK_Gen(MazeGenerator):
             if not maze_grid[x][y].lock
         ]
 
+        self._component_count = len(points_list)
+
         return DisjointSet.from_iterable(points_list)
 
     def next(self) -> tuple[Maze, Point | None, list[Point] | None]:
@@ -85,6 +88,9 @@ class IRK_Gen(MazeGenerator):
         dx, dy = dir.x, dir.y
         n_cell = Point(cx + dx, cy + dy)
 
+        self.maze.get_cell(c_cell).visited = True
+        self.maze.get_cell(n_cell).visited = True
+
         self._cells_stack.append(c_cell)
 
         if self._cells_dset.connected(c_cell, n_cell):
@@ -92,5 +98,21 @@ class IRK_Gen(MazeGenerator):
 
         if self.maze.try_open_wall(c_cell, c_wall):
             self._cells_dset.union(c_cell, n_cell)
+            self._component_count -= 1
 
         return self.maze, c_cell, self._cells_stack
+
+    def finish(self) -> Maze:
+        """Run generation to completion.
+        For Kruskal's, it's gotta be until the disjoint-set
+        has the only set in it.
+
+        Returns:
+            ready maze
+        """
+        while self._component_count > 1 and self._walls_list:
+            self.next()
+
+        if not self._perfect:
+            self._braid_maze()
+        return self.maze
