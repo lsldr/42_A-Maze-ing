@@ -19,6 +19,13 @@ class Wall(Flag):
         y -= 1 if self.NORTH in self else 0
         return Point(x, y)
 
+    @classmethod
+    def from_direction(cls, dir: Point) -> Wall:
+        for w in cls.ALL:
+            if w.get_direction() == dir:
+                return w
+        raise ValueError("Function only accepts cardinal directions")
+
     def opposite(self) -> Wall:
         ret = self.NONE
         match self:

@@ -2,7 +2,15 @@ import gui.program as gp
 import PIL.Image
 import PIL.ImageOps
 from enum import Enum, auto
-from mazegen import BFS_pathfinder, DFS_gen, Maze, Maze_Generator, Pathfinder
+from mazegen import (
+    BFSPathfinder,
+    Maze,
+    MazeGenerator,
+    Pathfinder,
+    WilsonsGen,
+    DFSGen,
+    IRK_Gen,
+)
 from mazegen.cell import Wall
 from mazegen.util import Point
 from PIL.Image import Image
@@ -13,6 +21,7 @@ from typing import Any
 
 class MazeManager:
     """Class for managing the maze and drawing it on the screen"""
+
     class State(Enum):
         MAZEGEN = auto()
         PATHFIND = auto()
@@ -37,11 +46,13 @@ class MazeManager:
         self._maze_gen_last: Point | None = None
         self._path_stack: list[Point] | None = None
 
-    def _get_maze_gen(self, config: dict[str, Any]) -> type[Maze_Generator]:
-        return DFS_gen
+    def _get_maze_gen(self, config: dict[str, Any]) -> type[MazeGenerator]:
+        return DFSGen
+        # return WilsonsGen
+        # return IRK_Gen
 
     def _get_path_solv(self, config: dict[str, Any]) -> type[Pathfinder]:
-        return BFS_pathfinder
+        return BFSPathfinder
 
     def _output_first(self, file: str) -> None:
         if not self._first_maze:
@@ -70,8 +81,9 @@ class MazeManager:
             solv = self._get_path_solv(prog.config)
             perfect = prog.config["perfect"]
             pattern = prog.config["pattern_cells"]
-            self._maze = Maze(self._maze.size,
-                              self._maze.entry, self._maze.exit, pattern)
+            self._maze = Maze(
+                self._maze.size, self._maze.entry, self._maze.exit, pattern
+            )
             if prog.event == gp.Event.MAZE_NEW_SAME:
                 self._rand.setstate(self._rand_init_state)
             elif prog.event == gp.Event.MAZE_NEW_RANDOM:
@@ -126,8 +138,9 @@ class MazeManager:
         exit_pos: Point = prog.config["exit"]
         pattern: set[tuple[int, int]] = prog.config.get("pattern_cells", set())
 
-        tmp_img = PIL.Image.new("RGBA",
-                                (width_cells * 32, height_cells * 32), "#DDD")
+        tmp_img = PIL.Image.new(
+            "RGBA", (width_cells * 32, height_cells * 32), "#DDD"
+        )
         canvas = ImageDraw(tmp_img)
 
         img_w, img_h = tmp_img.size
@@ -145,11 +158,13 @@ class MazeManager:
                 x1 = int((x + 1) * cell_w)
                 y1 = int((y + 1) * cell_h)
 
-                if (self._maze_gen_stack and
-                        Point(x, y) in self._maze_gen_stack):
+                if (
+                    self._maze_gen_stack
+                    and Point(x, y) in self._maze_gen_stack
+                ):
                     canvas.rectangle(
                         [(x0, y0), (x1, y1)], fill="#BBB"
-                        )  # darken
+                    )  # darken
                 if self._maze_gen_last == Point(x, y):
                     canvas.rectangle(
                         [(x0, y0), (x1, y1)], fill="#AAA"
@@ -163,11 +178,16 @@ class MazeManager:
         if self._maze.path and prog.show_path:
             off_w = cell_w / 2
             off_h = cell_h / 2
-            path = [(x * cell_w + off_w, y * cell_h + off_h) for
-                    x, y in self._maze.path]
-            canvas.line(path,
-                        prog.colors.path, round(min(cell_h, cell_w) // 2),
-                        "curve")
+            path = [
+                (x * cell_w + off_w, y * cell_h + off_h)
+                for x, y in self._maze.path
+            ]
+            canvas.line(
+                path,
+                prog.colors.path,
+                round(min(cell_h, cell_w) // 2),
+                "curve",
+            )
 
         # 3. Fill Entry, Exit, and 42 Pattern cells
         for x in range(width_cells):
@@ -210,6 +230,8 @@ class MazeManager:
                     canvas.line([(x1, y0), (x1, y1)], fill=wall_color, width=2)
 
         tmp_img = PIL.ImageOps.contain(tmp_img, img.size)
-        offset = ((img.size[0] - tmp_img.size[0]) // 2,
-                  (img.size[1] - tmp_img.size[1]) // 2)
+        offset = (
+            (img.size[0] - tmp_img.size[0]) // 2,
+            (img.size[1] - tmp_img.size[1]) // 2,
+        )
         img.paste(tmp_img, offset)

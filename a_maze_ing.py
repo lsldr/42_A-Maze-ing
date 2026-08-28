@@ -13,6 +13,7 @@ def loop_callback(prog: Program) -> None:
     Args:
         prog (Program): object keeping the state of application
     """
+    timestart = time.perf_counter()
     menu_width = prog.width // 4
     maze_border = 20
     maze_width = (prog.width - menu_width) - maze_border * 2
@@ -48,7 +49,8 @@ def loop_callback(prog: Program) -> None:
     mlx.mlx_destroy_image(prog.mlx_ptr, maze_ptr)
     if prog.quit:
         mlx.mlx_loop_exit(prog.mlx_ptr)
-    time.sleep(0.016)  # Around ~60 FPS
+    timeend = time.perf_counter()
+    time.sleep(max(0, 0.016 - (timeend - timestart)))  # Around ~60 FPS
 
 
 def keys_callback(key: int, prog: Program) -> None:
@@ -81,7 +83,7 @@ def close_callback(prog: Program) -> None:
     Args:
         prog (Program): object kepping the state of application
     """
-    Mlx().mlx_loop_exit(prog.mlx_ptr)
+    prog.quit = True
 
 
 def run(config: dict[str, Any]) -> None:
@@ -105,9 +107,7 @@ def run(config: dict[str, Any]) -> None:
                 "Failed to initialize MiniLibX (mlx_init returned NULL). "
                 "Ensure your DISPLAY environment variable is set."
             )
-        win_ptr = mlx_obj.mlx_new_window(
-            mlx_ptr, width, height, title
-        )
+        win_ptr = mlx_obj.mlx_new_window(mlx_ptr, width, height, title)
         if not win_ptr:
             raise RuntimeError(
                 "Failed to create MiniLibX window "

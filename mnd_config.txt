@@ -1,8 +1,8 @@
 #required by project file (this are mandatory)
-WIDTH=50				# int
-HEIGHT=25				# int
+WIDTH=25				# int
+HEIGHT=20				# int
 ENTRY=1,3				# tuple x,y where x<WIDTH and y<HEIGHT
-EXIT=45,12				# like ENTRY
+EXIT=19,17				# like ENTRY
 OUTPUT_FILE=maze.txt
 #default: False
 PERFECT=False			# if maze should have only one path (true) or more (false)

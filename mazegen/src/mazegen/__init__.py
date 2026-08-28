@@ -1,20 +1,24 @@
 from mazegen.cell import Cell, Wall
-from mazegen.generator.dfs import DFS_gen
-from mazegen.generator.maze_generator import Maze_Generator
+from mazegen.generator.dfs import DFSGen
+from mazegen.generator.maze_generator import MazeGenerator
+from mazegen.generator.wilsons import WilsonsGen
+from mazegen.generator.irk import IRK_Gen
 from mazegen.maze import Maze, MazeError
-from mazegen.pathfinder.bfs import BFS_pathfinder
+from mazegen.pathfinder.bfs import BFSPathfinder
 from mazegen.pathfinder.pathfinder import Pathfinder
 from mazegen.util import Point
 
 # Expose all the needed classes and functions at the package level
 __all__ = [
-    "BFS_pathfinder",
+    "BFSPathfinder",
     "Cell",
-    "DFS_gen",
+    "DFSGen",
+    "IRK_Gen",
     "Maze",
     "MazeError",
-    "Maze_Generator",
+    "MazeGenerator",
     "Pathfinder",
     "Point",
     "Wall",
+    "WilsonsGen",
 ]

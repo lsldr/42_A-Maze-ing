@@ -5,7 +5,7 @@ from mazegen.util import Point
 from random import Random
 
 
-class Maze_Generator(ABC):
+class MazeGenerator(ABC):
     def __init__(
         self, maze: Maze, rand: Random, perfect: bool = False
     ) -> None:
@@ -33,6 +33,7 @@ class Maze_Generator(ABC):
             (x, y): optional position of the last checked cell
             optional stack of positions
         """
+        ...
 
     def _braid_maze(self) -> None:
         """Eliminates dead ends while preventing 3x3 open areas
@@ -166,4 +167,7 @@ class Maze_Generator(ABC):
         """
         while not self.maze.is_ready():
             self.next()
+
+        if not self._perfect:
+            self._braid_maze()
         return self.maze
