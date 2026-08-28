@@ -73,8 +73,6 @@ class IRK_Gen(MazeGenerator):
             if not maze_grid[x][y].lock
         ]
 
-        self._component_count = len(points_list)
-
         return DisjointSet.from_iterable(points_list)
 
     def next(self) -> tuple[Maze, Point | None, list[Point] | None]:
@@ -98,7 +96,6 @@ class IRK_Gen(MazeGenerator):
 
         if self.maze.try_open_wall(c_cell, c_wall):
             self._cells_dset.union(c_cell, n_cell)
-            self._component_count -= 1
 
         return self.maze, c_cell, self._cells_stack
 
@@ -110,7 +107,7 @@ class IRK_Gen(MazeGenerator):
         Returns:
             ready maze
         """
-        while self._component_count > 1 and self._walls_list:
+        while len(list(self._cells_dset.itersets())) > 1 and self._walls_list:
             self.next()
 
         if not self._perfect:
