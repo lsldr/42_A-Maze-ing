@@ -1,10 +1,22 @@
 from pathlib import Path
 from random import Random
 from subprocess import run
+import sys
 
-from mazegen import IRK_Gen, Maze, Point
+from mazegen import IRK_Gen, DFSGen, WilsonsGen, Maze, Point
 
 sizes = [(3, 3), (5, 7), (10, 10), (20, 15)]
+
+if len(sys.argv) != 2:
+    print("Provide an argument with the mazegen class name to test!")
+    print("Accepted class names: [IRK_Gen, DFSGen, WilsonsGen]")
+    sys.exit(1)
+
+raw_arg_name = sys.argv[1]
+
+if raw_arg_name not in ["IRK_Gen", "DFSGen", "WilsonsGen"]:
+    print("Accepted class names: [IRK_Gen, DFSGen, WilsonsGen]")
+    sys.exit(1)
 
 for width, height in sizes:
     for perfect in (True, False):
@@ -15,7 +27,12 @@ for width, height in sizes:
             Point(0, 0),
             Point(width - 1, height - 1),
         )
-        generator = IRK_Gen(maze, Random(42), perfect)
+        if raw_arg_name == "IRK_Gen":
+            generator = IRK_Gen(maze, Random(42), perfect)
+        elif raw_arg_name == "DFSGen":
+            generator = DFSGen(maze, Random(42), perfect)
+        elif raw_arg_name == "WilsonsGen":
+            generator = WilsonsGen(maze, Random(42), perfect)
         generator.finish()
         path.write_text(str(maze))
 

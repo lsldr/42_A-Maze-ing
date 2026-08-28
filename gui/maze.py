@@ -47,9 +47,9 @@ class MazeManager:
         self._path_stack: list[Point] | None = None
 
     def _get_maze_gen(self, config: dict[str, Any]) -> type[MazeGenerator]:
-        # return DFSGen
+        return DFSGen
         # return WilsonsGen
-        return IRK_Gen
+        # return IRK_Gen
 
     def _get_path_solv(self, config: dict[str, Any]) -> type[Pathfinder]:
         return BFSPathfinder
