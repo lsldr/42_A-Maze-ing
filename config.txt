@@ -1,23 +1,21 @@
 #required by project file (this are mandatory)
 WIDTH=50				# int
 HEIGHT=50				# int
-ENTRY=1,3				# tuple x,y where x<WIDTH and y<HEIGHT
+ENTRY=1,3				# tuple x,y where x < WIDTH and y < HEIGHT
 EXIT=45,42				# like ENTRY
 OUTPUT_FILE=maze.txt
 #default: False
-PERFECT=False			# if maze should have only one path (true) or more (false)
-
-# my additions (optional, can change, for now just ideas)
+PERFECT=False			# if maze should have only one path (true) or more
 
 # seed for maze gen, can be int, none or just ommited
 # to use default
 # defailt: none
-# SEED=none
+# SEED=42
 
 # algorithm for maze gen
 # avalible: dfs, wilson, irk
 # default: dfs
-# MAZEGEN=dfs
+# MAZEGEN=irk
 
 # pathfinding algorithm
 # avalible: bfs

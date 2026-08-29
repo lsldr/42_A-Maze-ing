@@ -11,6 +11,7 @@ class IRK_Gen(MazeGenerator):
 
     Attributes:
         maze: object used to create maze in"""
+
     def __init__(
         self, maze: Maze, rand: Random, perfect: bool = False
     ) -> None:
@@ -26,6 +27,7 @@ class IRK_Gen(MazeGenerator):
         self._walls_list = self._make_wall_list()
         self._cells_dset = self._get_cell_dset()
         self._cells_stack: list[Point] = []
+        self._opened_set: set[Point] = set()
 
     def _make_wall_list(self) -> list[tuple[Point, Wall]]:
         """Create a list with tuples containing points in grid bounds
@@ -97,7 +99,7 @@ class IRK_Gen(MazeGenerator):
             optional stack of positions
         """
         if not self._walls_list:
-            return self.maze, None, None
+            return self.maze, None, self._cells_stack
 
         c_cell, c_wall = self._walls_list.pop()
         cx, cy = c_cell.x, c_cell.y
@@ -106,19 +108,20 @@ class IRK_Gen(MazeGenerator):
         dx, dy = dir.x, dir.y
         n_cell = Point(cx + dx, cy + dy)
 
-        self.maze.get_cell(c_cell).visited = True
-        self.maze.get_cell(n_cell).visited = True
-
-        self._cells_stack.append(c_cell)
-
         if self._cells_dset.connected(c_cell, n_cell):
             return (self.maze, c_cell, self._cells_stack)
 
         if self.maze.try_open_wall(c_cell, c_wall):
             self._cells_dset.union(c_cell, n_cell)
             self._dset_size -= 1
+            if c_cell not in self._opened_set:
+                self._opened_set.add(c_cell)
+                self._cells_stack.append(c_cell)
+            if n_cell not in self._opened_set:
+                self._opened_set.add(n_cell)
+                self._cells_stack.append(n_cell)
 
-        return self.maze, c_cell, None
+        return self.maze, c_cell, self._cells_stack
 
     def finish(self) -> Maze:
         """Run generation to completion.

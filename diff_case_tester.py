@@ -3,7 +3,7 @@ from random import Random
 from subprocess import run
 import sys
 
-from mazegen import IRK_Gen, DFSGen, WilsonsGen, Maze, Point
+from mazegen import IRK_Gen, DFSGen, WilsonsGen, Maze, Point, MazeGenerator
 
 sizes = [(3, 3), (5, 7), (10, 10), (20, 15)]
 
@@ -27,6 +27,7 @@ for width, height in sizes:
             Point(0, 0),
             Point(width - 1, height - 1),
         )
+        generator: MazeGenerator
         if raw_arg_name == "IRK_Gen":
             generator = IRK_Gen(maze, Random(42), perfect)
         elif raw_arg_name == "DFSGen":

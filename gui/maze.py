@@ -4,6 +4,7 @@ import PIL.ImageOps
 import sys
 from enum import Enum, auto
 from mazegen import (
+    AStarPathfinder,
     BFSPathfinder,
     DFSGen,
     IRK_Gen,
@@ -67,10 +68,12 @@ class MazeManager:
         return DFSGen
 
     def _get_path_solv(self, config: dict[str, Any]) -> type[Pathfinder]:
-        algo = config["pathfinding"]
+        algo = config.get("pathfinding", "bfs")
         match algo:
             case "bfs":
                 return BFSPathfinder
+            case "astar" | "a*" | "a_star":
+                return AStarPathfinder
         return BFSPathfinder
 
     def _output_first(self, file: str) -> None:
