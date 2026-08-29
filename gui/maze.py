@@ -208,7 +208,7 @@ class MazeManager:
         pattern: set[tuple[int, int]] = prog.config.get("pattern_cells", set())
 
         tmp_img = PIL.Image.new(
-            "RGBA", (width_cells * 32, height_cells * 32), "#DDD"
+            "RGBA", (width_cells * 16, height_cells * 16), "#DDD"
         )
         canvas = ImageDraw(tmp_img)
 
