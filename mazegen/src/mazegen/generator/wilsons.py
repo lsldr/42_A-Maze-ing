@@ -6,9 +6,21 @@ from random import Random
 
 
 class WilsonsGen(MazeGenerator):
+    """Generate maze using loop erased random walk.
+
+    Attributes:
+        maze: object used to create maze in"""
     def __init__(
         self, maze: Maze, rand: Random, perfect: bool = False
     ) -> None:
+        """Initalize generator.
+
+        Args:
+            maze (Maze): Object to be worked on
+            rand (Random): Random number generator
+            perfect (bool): Defines if maze should have only
+                one solution (True) or more (False)
+        """
         super().__init__(maze, rand, perfect)
         self._avalible = {
             Point(x, y) for x in range(maze.size.x) for y in range(maze.size.y)
@@ -20,6 +32,13 @@ class WilsonsGen(MazeGenerator):
         self._path: list[Point] = []
 
     def next(self) -> tuple[Maze, Point | None, list[Point] | None]:
+        """Generate next step in maze generation.
+
+        Returns:
+            modified maze
+            optional position of the last checked cell
+            optional stack of positions
+        """
         if not self._avalible:
             return self.maze, None, None
 

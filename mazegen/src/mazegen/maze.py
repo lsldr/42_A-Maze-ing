@@ -3,10 +3,16 @@ from mazegen.util import Point
 
 
 class MazeError(Exception):
-    """Error class for when something is not right with maze object"""
+    """Something is not right with maze"""
 
 
 class Maze:
+    """Represents maze
+
+    Attributes:
+        path: shortest path between entry point and exit,
+            can be empty if maze wasn't been run through pathfinding class
+    """
     def __init__(
         self,
         size: Point,
@@ -14,6 +20,17 @@ class Maze:
         exit: Point,
         pattern_cells: set[tuple[int, int]] | set[Point] | None = None,
     ) -> None:
+        """Initialize maze
+
+        Args:
+            size (Point): size of the maze
+            entry (Point): entry point for this maze
+            exit (Point): exit point for this maze
+            pattern_cell (set, optional): set of points to lock
+
+        Raises:
+            ValueError if entry or exit is outside of maze bounds
+        """
         if not (0 <= entry.x < size.x and 0 <= entry.y < size.y):
             raise ValueError("Entry point outside maze structure")
         if not (0 <= exit.x < size.x and 0 <= exit.y < size.y):
@@ -35,22 +52,27 @@ class Maze:
 
     @property
     def size(self) -> Point:
+        """Size of this maze"""
         return self._size
 
     @property
     def entry(self) -> Point:
+        """Entry point of this maze"""
         return self._entry
 
     @property
     def exit(self) -> Point:
+        """Exit point of this maze"""
         return self._exit
 
     @property
     def pattern_cells(self) -> set[Point]:
+        """Pattern cells of this maze"""
         return self._pattern_cells
 
     @property
     def grid(self) -> list[list[Cell]]:
+        """Internal grid of cells"""
         return self._maze
 
     def __str__(self) -> str:
@@ -70,17 +92,36 @@ class Maze:
         return "\n".join(lines)
 
     def in_bounds(self, pos: Point) -> bool:
+        """Return if pos is in bounds of this maze
+
+        Args:
+            pos (Point): position to test
+
+        Retruns:
+            True if pos is in bounds, False otherwise
+        """
         return 0 <= pos.x < self._size.x and 0 <= pos.y < self._size.y
 
     def get_cell(self, pos: Point) -> Cell:
+        """Get cell on specified position.
+
+        Args:
+            pos (Point): position of the cell
+
+        Returns:
+            cell on the specified position
+
+        Raises:
+            IndecError if position pos is outside maze bounds"""
         if not self.in_bounds(pos):
-            raise ValueError(f"Position {pos} outside the maze")
+            raise IndexError(f"Position {pos} outside the maze")
         return self._maze[pos.x][pos.y]
 
     def try_open_wall(self, pos: Point, side: Wall) -> bool:
         """Opens  wall between pos and pos + side.
 
-        Returns False if out of bounds or if either cell is locked.
+        Returns:
+            False if either are out of bounds or if one of cells is locked.
         """
         if not self.in_bounds(pos):
             return False

@@ -7,16 +7,27 @@ from random import Random
 
 
 class IRK_Gen(MazeGenerator):
+    """Generate maze using Iterative Randomized Kruskal's algorithm.
 
+    Attributes:
+        maze: object used to create maze in"""
     def __init__(
         self, maze: Maze, rand: Random, perfect: bool = False
     ) -> None:
+        """Initalize generator.
+
+        Args:
+            maze (Maze): Object to be worked on
+            rand (Random): Random number generator
+            perfect (bool): Defines if maze should have only
+                one solution (True) or more (False)
+        """
         super().__init__(maze, rand, perfect)
-        self._walls_list = self.make_wall_list()
-        self._cells_dset = self.get_cell_dset()
+        self._walls_list = self._make_wall_list()
+        self._cells_dset = self._get_cell_dset()
         self._cells_stack: list[Point] = []
 
-    def make_wall_list(self) -> list[tuple[Point, Wall]]:
+    def _make_wall_list(self) -> list[tuple[Point, Wall]]:
         """Create a list with tuples containing points in grid bounds
         and walls from among the eastern and sotuhern ones to get internal
         walls only once.
@@ -47,7 +58,7 @@ class IRK_Gen(MazeGenerator):
         self._rand.shuffle(wall_list)
         return wall_list
 
-    def get_cell_dset(self) -> DisjointSet[Point]:
+    def _get_cell_dset(self) -> DisjointSet[Point]:
         """Creates a disjoint set of all the cells that are not locked.
         A disjoint set is an array of sets that do not share any elements.
         When a union method is used on it, the two sets passed as parameters
@@ -78,6 +89,13 @@ class IRK_Gen(MazeGenerator):
         return DisjointSet.from_iterable(points_list)
 
     def next(self) -> tuple[Maze, Point | None, list[Point] | None]:
+        """Generate next step in maze generation.
+
+        Returns:
+            modified maze
+            optional position of the last checked cell
+            optional stack of positions
+        """
         if not self._walls_list:
             return self.maze, None, None
 

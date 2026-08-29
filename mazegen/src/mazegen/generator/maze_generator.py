@@ -6,9 +6,22 @@ from random import Random
 
 
 class MazeGenerator(ABC):
+    """Abstract base for every maze generator.
+
+    Attributes:
+        maze: maze object used in generation
+    """
     def __init__(
         self, maze: Maze, rand: Random, perfect: bool = False
     ) -> None:
+        """Initalize generator.
+
+        Args:
+            maze (Maze): Object to be worked on
+            rand (Random): Random number generator
+            perfect (bool): Defines if maze should have only
+                one solution (True) or more (False)
+        """
         self._rand = rand
         self.maze = maze
         self._perfect = perfect
@@ -26,11 +39,11 @@ class MazeGenerator(ABC):
 
     @abstractmethod
     def next(self) -> tuple[Maze, Point | None, list[Point] | None]:
-        """Generate next step in maze generation
+        """Generate next step in maze generation.
 
         Returns:
-            Maze: maze that was modified
-            (x, y): optional position of the last checked cell
+            modified maze
+            optional position of the last checked cell
             optional stack of positions
         """
         ...

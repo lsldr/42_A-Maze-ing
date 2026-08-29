@@ -3,6 +3,7 @@ from mazegen.util import Point
 
 
 class Wall(Flag):
+    """Represents walls in cell of the maze"""
     NONE = 0
     NORTH = 1
     EAST = 2
@@ -58,12 +59,23 @@ class Wall(Flag):
 
 
 class Cell:
+    """Cell of the maze.
+
+    Attributes:
+        visited: if cell was already visited
+        lock: if True cell should not be modified
+    """
     def __init__(self) -> None:
         self._walls: Wall = Wall.ALL
         self.lock = False
         self.visited = False
 
     def open_wall(self, side: Wall) -> None:
+        """Open selected side if possible
+
+        Raises:
+            ValueError if cell is locked
+        """
         if not self.lock:
             self._walls = self._walls & ~side
         else:
@@ -71,6 +83,7 @@ class Cell:
 
     @property
     def walls(self) -> Wall:
+        """Walls of this cell"""
         return self._walls
 
     def __str__(self) -> str:

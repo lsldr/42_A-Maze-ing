@@ -11,7 +11,13 @@ if TYPE_CHECKING:
 
 
 class BFSPathfinder(Pathfinder):
+    """Find path in maze using Breth First Search algoritm."""
     def __init__(self, maze: Maze) -> None:
+        """Initialize pathfinder
+
+        Args:
+            maze (Maze): where to find path
+        """
         super().__init__(maze)
         self._queue: deque[Point] = deque([self.maze.entry])
         self._visited: set[Point] = {self.maze.entry}

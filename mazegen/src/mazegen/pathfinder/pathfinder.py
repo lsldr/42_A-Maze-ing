@@ -9,7 +9,13 @@ if TYPE_CHECKING:
 
 
 class Pathfinder(ABC):
+    """Base class for pathfinders"""
     def __init__(self, maze: Maze) -> None:
+        """Initialize pathfinder
+
+        Args:
+            maze (Maze): where to find path
+        """
         self.maze = maze
         self._done = False
         self._path: list[Point] = []

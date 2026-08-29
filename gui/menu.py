@@ -3,10 +3,10 @@ from PIL import Image, ImageDraw
 
 
 class MainMenuPanel:
-    """Main menu of application"""
+    """Main menu of an application"""
 
     def __init__(self) -> None:
-        """Function used to draw the menu on screen
+        """Main menu of an application
 
         Args:
             img (Image): pillow Image object used to draw menu on screen
@@ -27,7 +27,7 @@ class MainMenuPanel:
         ]
 
     def handle_keys(self, key: int, prog: program.Program) -> None:
-        """Handles the keys for the menu
+        """Handle key presses
 
         Args:
             key (int): keycode of keyboard
@@ -54,7 +54,10 @@ class MainMenuPanel:
                 prog.colors.maze_next()
 
     def draw(self, img: Image.Image) -> None:
-        """Function used to draw the menu on screen."""
+        """Draw menu on given image
+
+        Args:
+            img (Image): image to draw on"""
         canvas = ImageDraw.Draw(img)
 
         if self._menu_list:

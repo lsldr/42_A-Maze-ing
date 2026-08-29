@@ -21,7 +21,7 @@ from typing import Any
 
 
 class MazeManager:
-    """Class for managing the maze and drawing it on the screen"""
+    """Manages the maze and drawing it on the screen."""
 
     class State(Enum):
         MAZEGEN = auto()
@@ -29,6 +29,10 @@ class MazeManager:
         DONE = auto()
 
     def __init__(self, config: dict[str, Any]) -> None:
+        """Initialize MazeManager.
+
+        Args:
+            config (dict): configuration of this program"""
         width = config["width"]
         height = config["height"]
         entry = config["entry"]
@@ -83,14 +87,13 @@ class MazeManager:
         self._first_maze = False
 
     def tick(self, prog: gp.Program) -> None:
-        """Function to be called every loop of the program
+        """Function to be called every loop of the program.
 
-        This function handles the maze generation
+        Handles the maze generation.
 
         Args:
             prog (Program): state object of the program
         """
-
         if prog.event in [gp.Event.MAZE_NEW_SAME, gp.Event.MAZE_NEW_RANDOM]:
             self._output_first(prog.config["output_file"])
             gen = self._get_maze_gen(prog.config)
@@ -148,6 +151,12 @@ class MazeManager:
             self._output_first(prog.config["output_file"])
 
     def draw(self, img: Image, prog: gp.Program) -> None:
+        """Draw the maze on to the image keeping proportions of the maze.
+
+        Args:
+            img (Image): image to put maze on
+            prog: (Program): state object of the program
+        """
         width_cells: int = prog.config["width"]
         height_cells: int = prog.config["height"]
         entry: Point = prog.config["entry"]
@@ -237,13 +246,17 @@ class MazeManager:
                 y1 = int((y + 1) * cell_h)
                 if (self._walls_vis or cell.visited) and (x, y) not in pattern:
                     if Wall.NORTH in walls:
-                        canvas.line([(x0, y0), (x1, y0)], fill=wall_color, width=2)
+                        canvas.line([(x0, y0), (x1, y0)],
+                                    fill=wall_color, width=2)
                     if Wall.SOUTH in walls:
-                        canvas.line([(x0, y1), (x1, y1)], fill=wall_color, width=2)
+                        canvas.line([(x0, y1), (x1, y1)],
+                                    fill=wall_color, width=2)
                     if Wall.WEST in walls:
-                        canvas.line([(x0, y0), (x0, y1)], fill=wall_color, width=2)
+                        canvas.line([(x0, y0), (x0, y1)],
+                                    fill=wall_color, width=2)
                     if Wall.EAST in walls:
-                        canvas.line([(x1, y0), (x1, y1)], fill=wall_color, width=2)
+                        canvas.line([(x1, y0), (x1, y1)],
+                                    fill=wall_color, width=2)
 
         tmp_img = PIL.ImageOps.contain(tmp_img, img.size)
         offset = (

@@ -12,7 +12,7 @@ class Event(Enum):
 
 
 class Colors:
-    """Class keeping color combinations for drawing a maze"""
+    """Keeps color combinations for drawing a maze"""
 
     def __init__(self) -> None:
         self._maze_idx = 0
@@ -51,7 +51,7 @@ class Colors:
 
 
 class Program:
-    """Class made to keep the state of the application"""
+    """Keeps the state of the application"""
 
     def __init__(
         self,
@@ -62,7 +62,7 @@ class Program:
         height: int,
         pause: bool = False
     ) -> None:
-        """Class made to keep the state of the application
+        """Initialize program
 
         Args:
             mlx_ptr (int): pointer to the mlx systems
