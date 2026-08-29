@@ -153,14 +153,16 @@ def parse_config(file_path_str: str) -> dict[str, Any]:
     pathfind = raw_config.get("PATHFINDING")
     if not pathfind:
         pathfind = "bfs"
-    elif pathfind.lower() in ["bfs", "astar", "a*"]:
-        pathfind = pathfind.lower()
     else:
-        print(
-            f"Unnknown pathfinding algorithm {pathfind}, defaulting to bfs",
-            file=sys.stderr,
-        )
-        pathfind = "bfs"
+        normalized = pathfind.strip().lower().replace("_", "")
+        if normalized in ["bfs", "astar"]:
+            pathfind = pathfind.lower()
+        else:
+            print(
+                f"Unnknown pathfinding algorithm {pathfind}, defaulting to bfs",
+                file=sys.stderr,
+            )
+            pathfind = "bfs"
 
     seed = raw_config.get("SEED")
     if seed and seed.lower() == "none":

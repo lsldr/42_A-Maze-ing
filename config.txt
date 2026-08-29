@@ -10,7 +10,7 @@ PERFECT=False			# if maze should have only one path (true) or more
 # seed for maze gen, can be int, none or just ommited
 # to use default
 # defailt: none
-# SEED=42
+SEED=42
 
 # algorithm for maze gen
 # avalible: dfs, wilson, irk
@@ -20,4 +20,4 @@ PERFECT=False			# if maze should have only one path (true) or more
 # pathfinding algorithm
 # avalible: bfs, astar
 # default: bfs
-# PATHFINDING=bfs
+# PATHFINDING=astar
