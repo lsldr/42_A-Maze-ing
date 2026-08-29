@@ -12,12 +12,12 @@ PERFECT=False			# if maze should have only one path (true) or more (false)
 # seed for maze gen, can be int, none or just ommited
 # to use default
 # defailt: none
-# SEED=none
+# SEED=aaa
 
 # algorithm for maze gen
-# avalible: randomdfs
-# default: randomdfs
-# MAZEGEN=randomdfs
+# avalible: dfs, wilson, irk
+# default: dfs
+MAZEGEN=wilson
 
 # pathfinding algorithm
 # avalible: bfs

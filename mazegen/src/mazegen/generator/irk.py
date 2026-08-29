@@ -1,9 +1,9 @@
-from mazegen.cell import Wall
 from .maze_generator import MazeGenerator
+from disjoint_set import DisjointSet
+from mazegen.cell import Wall
 from mazegen.maze import Maze
 from mazegen.util import Point
 from random import Random
-from disjoint_set import DisjointSet
 
 
 class IRK_Gen(MazeGenerator):
@@ -47,7 +47,7 @@ class IRK_Gen(MazeGenerator):
         self._rand.shuffle(wall_list)
         return wall_list
 
-    def get_cell_dset(self) -> DisjointSet:
+    def get_cell_dset(self) -> DisjointSet[Point]:
         """Creates a disjoint set of all the cells that are not locked.
         A disjoint set is an array of sets that do not share any elements.
         When a union method is used on it, the two sets passed as parameters
@@ -79,7 +79,7 @@ class IRK_Gen(MazeGenerator):
 
     def next(self) -> tuple[Maze, Point | None, list[Point] | None]:
         if not self._walls_list:
-            return self.maze, None, self._cells_stack
+            return self.maze, None, None
 
         c_cell, c_wall = self._walls_list.pop()
         cx, cy = c_cell.x, c_cell.y
@@ -100,7 +100,7 @@ class IRK_Gen(MazeGenerator):
             self._cells_dset.union(c_cell, n_cell)
             self._dset_size -= 1
 
-        return self.maze, c_cell, self._cells_stack
+        return self.maze, c_cell, None
 
     def finish(self) -> Maze:
         """Run generation to completion.

@@ -1,15 +1,16 @@
 import gui.program as gp
 import PIL.Image
 import PIL.ImageOps
+import sys
 from enum import Enum, auto
 from mazegen import (
     BFSPathfinder,
+    DFSGen,
+    IRK_Gen,
     Maze,
     MazeGenerator,
     Pathfinder,
     WilsonsGen,
-    DFSGen,
-    IRK_Gen,
 )
 from mazegen.cell import Wall
 from mazegen.util import Point
@@ -32,11 +33,13 @@ class MazeManager:
         height = config["height"]
         entry = config["entry"]
         exit = config["exit"]
+        self._walls_vis = False
+        seed = config["seed"]
         gen = self._get_maze_gen(config)
         solv = self._get_path_solv(config)
         pattern = config["pattern_cells"]
         self._maze = Maze(Point(width, height), entry, exit, pattern)
-        self._rand = Random()
+        self._rand = Random(seed)
         self._rand_init_state = self._rand.getstate()
         self._mazegen = gen(self._maze, self._rand, config["perfect"])
         self._pathfind = solv(self._maze)
@@ -47,11 +50,23 @@ class MazeManager:
         self._path_stack: list[Point] | None = None
 
     def _get_maze_gen(self, config: dict[str, Any]) -> type[MazeGenerator]:
+        algo = config["mazegen"]
+        self._walls_vis = False
+        match algo:
+            case "dfs":
+                return DFSGen
+            case "wilson":
+                return WilsonsGen
+            case "irk":
+                self._walls_vis = True
+                return IRK_Gen
         return DFSGen
-        # return WilsonsGen
-        # return IRK_Gen
 
     def _get_path_solv(self, config: dict[str, Any]) -> type[Pathfinder]:
+        algo = config["pathfinding"]
+        match algo:
+            case "bfs":
+                return BFSPathfinder
         return BFSPathfinder
 
     def _output_first(self, file: str) -> None:
@@ -63,7 +78,8 @@ class MazeManager:
             with open(file, "w") as f:
                 f.write(str(self._maze))
         except PermissionError:
-            print("Error while writing to file: Access denied")
+            print("Error while writing to file: Access denied",
+                  file=sys.stderr)
         self._first_maze = False
 
     def tick(self, prog: gp.Program) -> None:
@@ -219,15 +235,15 @@ class MazeManager:
                 y0 = int(y * cell_h)
                 x1 = int((x + 1) * cell_w)
                 y1 = int((y + 1) * cell_h)
-
-                if cell.visited and Wall.NORTH in walls:
-                    canvas.line([(x0, y0), (x1, y0)], fill=wall_color, width=2)
-                if cell.visited and Wall.SOUTH in walls:
-                    canvas.line([(x0, y1), (x1, y1)], fill=wall_color, width=2)
-                if cell.visited and Wall.WEST in walls:
-                    canvas.line([(x0, y0), (x0, y1)], fill=wall_color, width=2)
-                if cell.visited and Wall.EAST in walls:
-                    canvas.line([(x1, y0), (x1, y1)], fill=wall_color, width=2)
+                if (self._walls_vis or cell.visited) and (x, y) not in pattern:
+                    if Wall.NORTH in walls:
+                        canvas.line([(x0, y0), (x1, y0)], fill=wall_color, width=2)
+                    if Wall.SOUTH in walls:
+                        canvas.line([(x0, y1), (x1, y1)], fill=wall_color, width=2)
+                    if Wall.WEST in walls:
+                        canvas.line([(x0, y0), (x0, y1)], fill=wall_color, width=2)
+                    if Wall.EAST in walls:
+                        canvas.line([(x1, y0), (x1, y1)], fill=wall_color, width=2)
 
         tmp_img = PIL.ImageOps.contain(tmp_img, img.size)
         offset = (

@@ -1,3 +1,4 @@
+import sys
 from mazegen import Point
 from pathlib import Path
 from typing import Any
@@ -124,6 +125,30 @@ def parse_config(file_path_str: str) -> dict[str, Any]:
             f"Type conversion error in config values: {err}"
         ) from err
 
+    # Optional
+    mazegen = raw_config.get("MAZEGEN")
+    if not mazegen:
+        mazegen = "dfs"
+    elif mazegen.lower() in ["dfs", "irk", "wilson"]:
+        mazegen = mazegen.lower()
+    else:
+        print(f"Unnknown maze algorithm {mazegen} defaulting to dfs",
+              file=sys.stderr)
+        mazegen = "dfs"
+
+    pathfind = raw_config.get("PATHFINDING")
+    if not pathfind:
+        pathfind = "bfs"
+    elif pathfind.lower() in ["bfs"]:
+        pathfind = pathfind.lower()
+    else:
+        print(f"Unnknown pathfinding algorithm {pathfind}, defaulting to bfs",
+              file=sys.stderr)
+
+    seed = raw_config.get("SEED")
+    if seed and seed.lower() == "none":
+        seed = None
+
     # Construct final config dictionary for mazegen
     return {
         "width": width,
@@ -133,6 +158,9 @@ def parse_config(file_path_str: str) -> dict[str, Any]:
         "output_file": raw_config["OUTPUT_FILE"],
         "perfect": perfect,
         "pattern_cells": pattern_cells,
+        "mazegen": mazegen,
+        "pathfinding": pathfind,
+        "seed": seed,
         **{
             k.lower(): v
             for k, v in raw_config.items()

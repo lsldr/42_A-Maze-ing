@@ -13,44 +13,46 @@ def loop_callback(prog: Program) -> None:
     Args:
         prog (Program): object keeping the state of application
     """
-    timestart = time.perf_counter()
-    menu_width = prog.width // 4
-    maze_border = 20
-    maze_width = (prog.width - menu_width) - maze_border * 2
-    maze_height = prog.height - maze_border * 2
-
     mlx = Mlx()
+    try:
+        timestart = time.perf_counter()
+        menu_width = prog.width // 4
+        maze_border = 20
+        maze_width = (prog.width - menu_width) - maze_border * 2
+        maze_height = prog.height - maze_border * 2
 
-    # 1. Draw menu
-    menu_ptr = mlx.mlx_new_image(prog.mlx_ptr, menu_width, prog.height)
-    menu_data, _, _, _ = mlx.mlx_get_data_addr(menu_ptr)
-    menu = Image.new(
-        "RGBA", (menu_width, prog.height), "#181825"
-    )  # Dark gray/blue background
-    prog.active_menu.draw(menu)
-    menu_data[:] = menu.tobytes()
+        # 1. Draw menu
+        menu_ptr = mlx.mlx_new_image(prog.mlx_ptr, menu_width, prog.height)
+        menu_data, _, _, _ = mlx.mlx_get_data_addr(menu_ptr)
+        menu = Image.new(
+            "RGBA", (menu_width, prog.height), "#181825"
+        )  # Dark gray/blue background
+        prog.active_menu.draw(menu)
+        menu_data[:] = menu.tobytes()
 
-    # 2. Draw maze
-    maze_ptr = mlx.mlx_new_image(prog.mlx_ptr, maze_width, maze_height)
-    maze_data, _, _, _ = mlx.mlx_get_data_addr(maze_ptr)
-    maze = Image.new("RGBA", (maze_width, maze_height))
-    prog.maze_panel.tick(prog)
-    prog.maze_panel.draw(maze, prog)
+        # 2. Draw maze
+        maze_ptr = mlx.mlx_new_image(prog.mlx_ptr, maze_width, maze_height)
+        maze_data, _, _, _ = mlx.mlx_get_data_addr(maze_ptr)
+        maze = Image.new("RGBA", (maze_width, maze_height))
+        prog.maze_panel.tick(prog)
+        prog.maze_panel.draw(maze, prog)
 
-    maze_data[:] = maze.tobytes()
-    mlx.mlx_clear_window(prog.mlx_ptr, prog.win_ptr)
-    mlx.mlx_put_image_to_window(
-        prog.mlx_ptr, prog.win_ptr, menu_ptr, prog.width - menu_width, 0
-    )
-    mlx.mlx_put_image_to_window(
-        prog.mlx_ptr, prog.win_ptr, maze_ptr, maze_border, maze_border
-    )
-    mlx.mlx_destroy_image(prog.mlx_ptr, menu_ptr)
-    mlx.mlx_destroy_image(prog.mlx_ptr, maze_ptr)
-    if prog.quit:
+        maze_data[:] = maze.tobytes()
+        mlx.mlx_clear_window(prog.mlx_ptr, prog.win_ptr)
+        mlx.mlx_put_image_to_window(
+            prog.mlx_ptr, prog.win_ptr, menu_ptr, prog.width - menu_width, 0
+        )
+        mlx.mlx_put_image_to_window(
+            prog.mlx_ptr, prog.win_ptr, maze_ptr, maze_border, maze_border
+        )
+        mlx.mlx_destroy_image(prog.mlx_ptr, menu_ptr)
+        mlx.mlx_destroy_image(prog.mlx_ptr, maze_ptr)
+        if prog.quit:
+            mlx.mlx_loop_exit(prog.mlx_ptr)
+        timeend = time.perf_counter()
+        time.sleep(max(0, 0.016 - (timeend - timestart)))  # Around ~60 FPS
+    except KeyboardInterrupt:
         mlx.mlx_loop_exit(prog.mlx_ptr)
-    timeend = time.perf_counter()
-    time.sleep(max(0, 0.016 - (timeend - timestart)))  # Around ~60 FPS
 
 
 def keys_callback(key: int, prog: Program) -> None:
@@ -61,9 +63,12 @@ def keys_callback(key: int, prog: Program) -> None:
         key (int): keycode of pressed key
         prog (Program): object keeping the state of application
     """
-    if key == 65307:
-        prog.quit = True
-    prog.active_menu.handle_keys(key, prog)
+    try:
+        if key == 65307:
+            prog.quit = True
+        prog.active_menu.handle_keys(key, prog)
+    except KeyboardInterrupt:
+        Mlx().mlx_loop_exit(prog.mlx_ptr)
 
 
 def expose_callback(prog: Program) -> None:
@@ -147,7 +152,8 @@ def main() -> None:
         # parsing from the file provided to the `configs` dict
         configs = parse_config(sys.argv[1].strip())
     except (FileNotFoundError, ConfigError) as e:
-        print(f"Error parsing configs with the provided filename:\n{e}")
+        print(f"Error parsing configs with the provided filename:\n{e}",
+              file=sys.stderr)
         sys.exit()
 
     run(configs)
