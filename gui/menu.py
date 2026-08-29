@@ -12,13 +12,14 @@ class MainMenuPanel:
         self._menu_list = [
             "Space: Start/Stop",
             "p: skip animation",
+            "a: rerun with alternate pathfinder",
             "x: change maze color",
             "c: change 42 color",
             "v: change path color",
             "d: show/hide path",
             "n: new maze from random seed",
             "m: new maze from seed",
-            "q: quit"
+            "q: quit",
         ]
 
     def handle_keys(self, key: int, prog: program.Program) -> None:
@@ -31,6 +32,8 @@ class MainMenuPanel:
         match key:
             case 32:  # space start/pause
                 prog.pause = not prog.pause
+            case 97:  # a rerun with alternate pathfinder
+                prog.event = program.Event.PATHFIND_ALTERNATE
             case 99:  # c change 42 color
                 prog.colors.emblem_next()
             case 100:  # d show/hide path

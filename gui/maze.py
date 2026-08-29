@@ -98,6 +98,13 @@ class MazeManager:
                 return AStarPathfinder
         return BFSPathfinder
 
+    def _toggle_pathfinding(self, config: dict[str, Any]) -> type[Pathfinder]:
+        """Switch to the alternate solver for the current maze."""
+        current = config.get("pathfinding", "bfs")
+        next_algo = "astar" if current == "bfs" else "bfs"
+        config["pathfinding"] = next_algo
+        return self._get_path_solv(config)
+
     def _output_first(self, file: str) -> None:
         """Write the first generated maze and path to an output file.
 
@@ -155,6 +162,14 @@ class MazeManager:
                 self._pathfind.finish()
                 self._path_stack = None
                 self._state = self.State.DONE
+            prog.event = gp.Event.NOTHING
+
+        if prog.event == gp.Event.PATHFIND_ALTERNATE:
+            if self._state != self.State.MAZEGEN:
+                solver_cls = self._toggle_pathfinding(prog.config)
+                self._pathfind = solver_cls(self._maze)
+                self._path_stack = None
+                self._state = self.State.PATHFIND
             prog.event = gp.Event.NOTHING
 
         if not prog.pause:

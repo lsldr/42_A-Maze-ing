@@ -9,6 +9,7 @@ class Event(Enum):
     MAZE_NEW_SAME = auto()
     MAZE_NEW_RANDOM = auto()
     MAZE_SKIP = auto()
+    PATHFIND_ALTERNATE = auto()
 
 
 class Colors:
