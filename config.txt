@@ -18,6 +18,6 @@ PERFECT=False			# if maze should have only one path (true) or more
 # MAZEGEN=irk
 
 # pathfinding algorithm
-# avalible: bfs
+# avalible: bfs, astar
 # default: bfs
 # PATHFINDING=bfs

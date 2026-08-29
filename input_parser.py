@@ -132,8 +132,10 @@ def parse_config(file_path_str: str) -> dict[str, Any]:
     elif mazegen.lower() in ["dfs", "irk", "wilson"]:
         mazegen = mazegen.lower()
     else:
-        print(f"Unnknown maze algorithm {mazegen} defaulting to dfs",
-              file=sys.stderr)
+        print(
+            f"Unnknown maze algorithm {mazegen} defaulting to dfs",
+            file=sys.stderr,
+        )
         mazegen = "dfs"
 
     pathfind = raw_config.get("PATHFINDING")
@@ -142,8 +144,10 @@ def parse_config(file_path_str: str) -> dict[str, Any]:
     elif pathfind.lower() in ["bfs", "astar", "a*"]:
         pathfind = pathfind.lower()
     else:
-        print(f"Unnknown pathfinding algorithm {pathfind}, defaulting to bfs",
-              file=sys.stderr)
+        print(
+            f"Unnknown pathfinding algorithm {pathfind}, defaulting to bfs",
+            file=sys.stderr,
+        )
         pathfind = "bfs"
 
     seed = raw_config.get("SEED")

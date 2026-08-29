@@ -6,20 +6,22 @@ from random import Random
 
 
 class WilsonsGen(MazeGenerator):
-    """Generate maze using loop erased random walk.
+    """Generate maze using loop-erased random walk (Wilson's algorithm).
 
     Attributes:
-        maze: object used to create maze in"""
+        maze (Maze): Maze object to be modified.
+    """
+
     def __init__(
         self, maze: Maze, rand: Random, perfect: bool = False
     ) -> None:
-        """Initalize generator.
+        """Initialize generator.
 
         Args:
-            maze (Maze): Object to be worked on
-            rand (Random): Random number generator
+            maze (Maze): Object to be worked on.
+            rand (Random): Random number generator.
             perfect (bool): Defines if maze should have only
-                one solution (True) or more (False)
+                one solution (True) or more (False).
         """
         super().__init__(maze, rand, perfect)
         self._avalible = {
@@ -35,9 +37,10 @@ class WilsonsGen(MazeGenerator):
         """Generate next step in maze generation.
 
         Returns:
-            modified maze
-            optional position of the last checked cell
-            optional stack of positions
+            tuple[Maze, Point | None, list[Point] | None]: A tuple containing:
+                - Maze: The modified maze instance.
+                - Point | None: Optional coordinate of the last checked cell.
+                - list[Point] | None: Optional stack of active path positions.
         """
         if not self._avalible:
             return self.maze, None, None

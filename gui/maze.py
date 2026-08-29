@@ -85,8 +85,9 @@ class MazeManager:
             with open(file, "w") as f:
                 f.write(str(self._maze))
         except PermissionError:
-            print("Error while writing to file: Access denied",
-                  file=sys.stderr)
+            print(
+                "Error while writing to file: Access denied", file=sys.stderr
+            )
         self._first_maze = False
 
     def tick(self, prog: gp.Program) -> None:
@@ -249,17 +250,21 @@ class MazeManager:
                 y1 = int((y + 1) * cell_h)
                 if (self._walls_vis or cell.visited) and (x, y) not in pattern:
                     if Wall.NORTH in walls:
-                        canvas.line([(x0, y0), (x1, y0)],
-                                    fill=wall_color, width=2)
+                        canvas.line(
+                            [(x0, y0), (x1, y0)], fill=wall_color, width=2
+                        )
                     if Wall.SOUTH in walls:
-                        canvas.line([(x0, y1), (x1, y1)],
-                                    fill=wall_color, width=2)
+                        canvas.line(
+                            [(x0, y1), (x1, y1)], fill=wall_color, width=2
+                        )
                     if Wall.WEST in walls:
-                        canvas.line([(x0, y0), (x0, y1)],
-                                    fill=wall_color, width=2)
+                        canvas.line(
+                            [(x0, y0), (x0, y1)], fill=wall_color, width=2
+                        )
                     if Wall.EAST in walls:
-                        canvas.line([(x1, y0), (x1, y1)],
-                                    fill=wall_color, width=2)
+                        canvas.line(
+                            [(x1, y0), (x1, y1)], fill=wall_color, width=2
+                        )
 
         tmp_img = PIL.ImageOps.contain(tmp_img, img.size)
         offset = (

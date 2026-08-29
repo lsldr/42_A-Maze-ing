@@ -45,7 +45,9 @@ class AStarPathfinder(Pathfinder):
         Returns:
             int: Manhattan distance between point and maze exit.
         """
-        return abs(point.x - self.maze.exit.x) + abs(point.y - self.maze.exit.y)
+        dx = abs(point.x - self.maze.exit.x)
+        dy = abs(point.y - self.maze.exit.y)
+        return dx + dy
 
     def _reconstruct_path(self) -> list[Point]:
         """Trace from exit point to entry using the parent dictionary.
