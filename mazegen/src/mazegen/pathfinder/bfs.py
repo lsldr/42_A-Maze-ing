@@ -11,12 +11,17 @@ if TYPE_CHECKING:
 
 
 class BFSPathfinder(Pathfinder):
-    """Find path in maze using Breth First Search algoritm."""
+    """Find path in maze using Breadth-First Search (BFS) algorithm.
+
+    Attributes:
+        maze (Maze): The maze instance being solved.
+    """
+
     def __init__(self, maze: Maze) -> None:
-        """Initialize pathfinder
+        """Initialize the BFS pathfinder.
 
         Args:
-            maze (Maze): where to find path
+            maze (Maze): Maze where the path is to be found.
         """
         super().__init__(maze)
         self._queue: deque[Point] = deque([self.maze.entry])
@@ -25,10 +30,11 @@ class BFSPathfinder(Pathfinder):
         self._explored: list[Point] = [self.maze.entry]
 
     def _reconstruct_path(self) -> list[Point]:
-        """Traces from exit point to entry using the parent dictionary
+        """Trace from exit point to entry using the parent dictionary.
 
-        Returns the list of points for the entry-to-exit path"""
-
+        Returns:
+            list[Point]: Ordered list of points forming the entry-to-exit path.
+        """
         path: list[Point] = []
         c_point: Point | None = self.maze.exit
         while c_point is not None and c_point != self.maze.entry:
@@ -41,23 +47,13 @@ class BFSPathfinder(Pathfinder):
         return path
 
     def next(self) -> tuple[bool, list[Point]]:
-        """After popping (with deque.popleft()) it from the queue, looks
-        at the current cell's neighbors that are reachable, then adds them
-        all to the queue (deque list), visited (set), parent(dict to backtrack)
-        and explored (list for visualization purposes). In each call,
-        continues to do this for current cells, gradually looking for
-        closes neighbor cells first and continuing. Over time, the explored
-        branches that did not lead to exit are all out of queue.
-        Whenever the current reaches exit, this means that the shortest path
-        to exit from entry is reached (since shortest ways are explored first),
-        so the backtracking method is called to build the path (list[Point])
-        to be returned from the class.
+        """Generate next step in BFS pathfinding.
 
-
-        Returns a tuple with a bool indicating if the path was found
-        and a list explored paths in order of exploration. Walls are
-        searched starting from the North and clockwise as of the current
-        version."""
+        Returns:
+            tuple[bool, list[Point]]: A tuple containing:
+                - bool: True if exit was reached or queue is exhausted.
+                - list[Point]: Explored points for GUI visualization.
+        """
 
         all_sides = [Wall.NORTH, Wall.EAST, Wall.SOUTH, Wall.WEST]
         if self._done or not self._queue:

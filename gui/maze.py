@@ -22,7 +22,11 @@ from typing import Any
 
 
 class MazeManager:
-    """Manages the maze and drawing it on the screen."""
+    """Manage maze generation, pathfinding state, and screen rendering.
+
+    Attributes:
+        State (Enum): Enum defining the lifecycle states of maze processing.
+    """
 
     class State(Enum):
         MAZEGEN = auto()
@@ -30,10 +34,12 @@ class MazeManager:
         DONE = auto()
 
     def __init__(self, config: dict[str, Any]) -> None:
-        """Initialize MazeManager.
+        """Initialize the MazeManager.
 
         Args:
-            config (dict): configuration of this program"""
+            config (dict[str, Any]): Parsed application configuration
+                dictionary.
+        """
         width = config["width"]
         height = config["height"]
         entry = config["entry"]
@@ -55,6 +61,14 @@ class MazeManager:
         self._path_stack: list[Point] | None = None
 
     def _get_maze_gen(self, config: dict[str, Any]) -> type[MazeGenerator]:
+        """Select the maze generator class based on configuration.
+
+        Args:
+            config (dict[str, Any]): Configuration dictionary.
+
+        Returns:
+            type[MazeGenerator]: Selected MazeGenerator subclass.
+        """
         algo = config["mazegen"]
         self._walls_vis = False
         match algo:
@@ -68,6 +82,14 @@ class MazeManager:
         return DFSGen
 
     def _get_path_solv(self, config: dict[str, Any]) -> type[Pathfinder]:
+        """Select the pathfinder class based on configuration.
+
+        Args:
+            config (dict[str, Any]): Configuration dictionary.
+
+        Returns:
+            type[Pathfinder]: Selected Pathfinder subclass.
+        """
         algo = config.get("pathfinding", "bfs")
         match algo:
             case "bfs":
@@ -77,6 +99,11 @@ class MazeManager:
         return BFSPathfinder
 
     def _output_first(self, file: str) -> None:
+        """Write the first generated maze and path to an output file.
+
+        Args:
+            file (str): Path of the destination output file.
+        """
         if not self._first_maze:
             return
         self._mazegen.finish()
@@ -91,12 +118,10 @@ class MazeManager:
         self._first_maze = False
 
     def tick(self, prog: gp.Program) -> None:
-        """Function to be called every loop of the program.
-
-        Handles the maze generation.
+        """Advance maze generation or pathfinding state by one tick.
 
         Args:
-            prog (Program): state object of the program
+            prog (gp.Program): Main program state object.
         """
         if prog.event in [gp.Event.MAZE_NEW_SAME, gp.Event.MAZE_NEW_RANDOM]:
             self._output_first(prog.config["output_file"])
@@ -155,11 +180,11 @@ class MazeManager:
             self._output_first(prog.config["output_file"])
 
     def draw(self, img: Image, prog: gp.Program) -> None:
-        """Draw the maze on to the image keeping proportions of the maze.
+        """Draw the current maze, active cells, and path onto an image canvas.
 
         Args:
-            img (Image): image to put maze on
-            prog: (Program): state object of the program
+            img (Image): Pillow RGBA image canvas to draw on.
+            prog (gp.Program): Main program state object.
         """
         width_cells: int = prog.config["width"]
         height_cells: int = prog.config["height"]

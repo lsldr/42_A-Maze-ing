@@ -10,18 +10,19 @@ class IRK_Gen(MazeGenerator):
     """Generate maze using Iterative Randomized Kruskal's algorithm.
 
     Attributes:
-        maze: object used to create maze in"""
+        maze (Maze): Maze object to be worked on.
+    """
 
     def __init__(
         self, maze: Maze, rand: Random, perfect: bool = False
     ) -> None:
-        """Initalize generator.
+        """Initialize generator.
 
         Args:
-            maze (Maze): Object to be worked on
-            rand (Random): Random number generator
+            maze (Maze): Object to be worked on.
+            rand (Random): Random number generator.
             perfect (bool): Defines if maze should have only
-                one solution (True) or more (False)
+                one solution (True) or more (False).
         """
         super().__init__(maze, rand, perfect)
         self._walls_list = self._make_wall_list()
@@ -30,16 +31,12 @@ class IRK_Gen(MazeGenerator):
         self._opened_set: set[Point] = set()
 
     def _make_wall_list(self) -> list[tuple[Point, Wall]]:
-        """Create a list with tuples containing points in grid bounds
-        and walls from among the eastern and sotuhern ones to get internal
-        walls only once.
-
-        Parameters:
-        Instance of the IRK_Gen class (self)
+        """Create a randomized list of internal candidate walls.
 
         Returns:
-        An ordered list with tuples of cells and eastern/southern walls"""
-
+            list[tuple[Point, Wall]]: List of tuples containing cell
+                coordinates and candidate eastern/southern walls.
+        """
         wall_list: list[tuple[Point, Wall]] = []
 
         for x in range(self.maze.size.x):
@@ -61,21 +58,12 @@ class IRK_Gen(MazeGenerator):
         return wall_list
 
     def _get_cell_dset(self) -> DisjointSet[Point]:
-        """Creates a disjoint set of all the cells that are not locked.
-        A disjoint set is an array of sets that do not share any elements.
-        When a union method is used on it, the two sets passed as parameters
-        (initally, each set's representing element (like a dict key) is the
-        single element contained in it) are made into 1 set where the
-        representing element is chosen as the second parameter's value.
-        The method to check if two elemenets are in the same set just compares
-        those two elements' representing element.
-
-        Parameters:
-        Instance of the IRK_Gen class (self)
+        """Create a disjoint set collection for all unlocked cells.
 
         Returns:
-        A disjoint set collection with each set containing unlocked cells."""
-
+            DisjointSet[Point]: Disjoint set structure tracking
+                connected cells.
+        """
         maze_grid = self.maze.grid
         maze_size = self.maze.size
 
@@ -94,9 +82,10 @@ class IRK_Gen(MazeGenerator):
         """Generate next step in maze generation.
 
         Returns:
-            modified maze
-            optional position of the last checked cell
-            optional stack of positions
+            tuple[Maze, Point | None, list[Point] | None]: A tuple containing:
+                - Maze: The modified maze instance.
+                - Point | None: Optional coordinate of the last checked cell.
+                - list[Point] | None: Optional stack of opened cell positions.
         """
         if not self._walls_list:
             return self.maze, None, self._cells_stack
@@ -125,11 +114,9 @@ class IRK_Gen(MazeGenerator):
 
     def finish(self) -> Maze:
         """Run generation to completion.
-        For Kruskal's, it's gotta be until the disjoint-set
-        has the only set in it.
 
         Returns:
-            ready maze
+            Maze: The fully generated maze object.
         """
         while self._dset_size > 1 and self._walls_list:
             self.next()

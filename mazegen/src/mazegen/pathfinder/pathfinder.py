@@ -9,23 +9,37 @@ if TYPE_CHECKING:
 
 
 class Pathfinder(ABC):
-    """Base class for pathfinders"""
+    """Base class for maze pathfinding algorithms.
+
+    Attributes:
+        maze (Maze): Maze instance where pathfinding is performed.
+    """
+
     def __init__(self, maze: Maze) -> None:
-        """Initialize pathfinder
+        """Initialize the pathfinder.
 
         Args:
-            maze (Maze): where to find path
+            maze (Maze): Maze where path is to be found.
         """
         self.maze = maze
         self._done = False
         self._path: list[Point] = []
 
     def is_done(self) -> bool:
-        """Check if path was found."""
+        """Check if pathfinding has finished.
+
+        Returns:
+            bool: True if path was found or search exhausted, False otherwise.
+        """
         return self._done
 
     def get_path(self) -> list[Point]:
-        """Returns shortest path from start to end, or empty if not ready."""
+        """Get the calculated path.
+
+        Returns:
+            list[Point]: Shortest path from start to end, or empty
+                if not ready.
+        """
         return self._path
 
     @abstractmethod
@@ -33,12 +47,17 @@ class Pathfinder(ABC):
         """Generate next step in pathfinding.
 
         Returns:
-            bool: True if pathfinding finished, False otherwise.
-            list[Point]: List of explored/checked spaces for visualization.
+            tuple[bool, list[Point]]: A tuple containing:
+                - bool: True if pathfinding finished, False otherwise.
+                - list[Point]: Explored coordinates for visualization.
         """
 
     def finish(self) -> list[Point]:
-        """Run pathfinding to completion and return the path."""
+        """Run pathfinding to completion.
+
+        Returns:
+            list[Point]: Shortest path from entry to exit.
+        """
         while not self.is_done():
             self.next()
         return self._path

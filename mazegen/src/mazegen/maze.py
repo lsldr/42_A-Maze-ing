@@ -3,16 +3,16 @@ from mazegen.util import Point
 
 
 class MazeError(Exception):
-    """Something is not right with maze"""
+    """Exception raised for invalid maze state or operations."""
 
 
 class Maze:
-    """Represents maze
+    """Representation of a grid-based maze.
 
     Attributes:
-        path: shortest path between entry point and exit,
-            can be empty if maze wasn't been run through pathfinding class
+        path (list[Point]): Shortest path between entry and exit points.
     """
+
     def __init__(
         self,
         size: Point,
@@ -20,16 +20,18 @@ class Maze:
         exit: Point,
         pattern_cells: set[tuple[int, int]] | set[Point] | None = None,
     ) -> None:
-        """Initialize maze
+        """Initialize the maze grid and boundaries.
 
         Args:
-            size (Point): size of the maze
-            entry (Point): entry point for this maze
-            exit (Point): exit point for this maze
-            pattern_cell (set, optional): set of points to lock
+            size (Point): Dimensions (width, height) of the maze.
+            entry (Point): Coordinates of the entry cell.
+            exit (Point): Coordinates of the exit cell.
+            pattern_cells (set[tuple[int, int]] | set[Point] | None,
+                optional): Coordinates of immutable locked pattern cells.
+                Defaults to None.
 
         Raises:
-            ValueError if entry or exit is outside of maze bounds
+            ValueError: If entry or exit coordinates are outside maze bounds.
         """
         if not (0 <= entry.x < size.x and 0 <= entry.y < size.y):
             raise ValueError("Entry point outside maze structure")
@@ -52,31 +54,35 @@ class Maze:
 
     @property
     def size(self) -> Point:
-        """Size of this maze"""
+        """Point: Dimensions of the maze grid."""
         return self._size
 
     @property
     def entry(self) -> Point:
-        """Entry point of this maze"""
+        """Point: Entry coordinate of the maze."""
         return self._entry
 
     @property
     def exit(self) -> Point:
-        """Exit point of this maze"""
+        """Point: Exit coordinate of the maze."""
         return self._exit
 
     @property
     def pattern_cells(self) -> set[Point]:
-        """Pattern cells of this maze"""
+        """set[Point]: Set of immutable pattern cell coordinates."""
         return self._pattern_cells
 
     @property
     def grid(self) -> list[list[Cell]]:
-        """Internal grid of cells"""
+        """list[list[Cell]]: 2D grid containing all maze cells."""
         return self._maze
 
     def __str__(self) -> str:
-        """Returns the maze represented as hex chars row by row."""
+        """Return the maze formatted as hexadecimal rows with coordinates.
+
+        Returns:
+            str: Hexadecimal maze representation followed by entry, exit, path.
+        """
         lines = []
         # Iterate row by row (y first, then x)
         for y in range(self._size.y):
@@ -92,36 +98,42 @@ class Maze:
         return "\n".join(lines)
 
     def in_bounds(self, pos: Point) -> bool:
-        """Return if pos is in bounds of this maze
+        """Check if a coordinate is within the maze bounds.
 
         Args:
-            pos (Point): position to test
+            pos (Point): Position coordinate to test.
 
-        Retruns:
-            True if pos is in bounds, False otherwise
+        Returns:
+            bool: True if position is within bounds, False otherwise.
         """
         return 0 <= pos.x < self._size.x and 0 <= pos.y < self._size.y
 
     def get_cell(self, pos: Point) -> Cell:
-        """Get cell on specified position.
+        """Get cell at specified coordinates.
 
         Args:
-            pos (Point): position of the cell
+            pos (Point): Position coordinate of the cell.
 
         Returns:
-            cell on the specified position
+            Cell: Cell instance at the given position.
 
         Raises:
-            IndecError if position pos is outside maze bounds"""
+            IndexError: If position is outside maze bounds.
+        """
         if not self.in_bounds(pos):
             raise IndexError(f"Position {pos} outside the maze")
         return self._maze[pos.x][pos.y]
 
     def try_open_wall(self, pos: Point, side: Wall) -> bool:
-        """Opens  wall between pos and pos + side.
+        """Open a shared wall between a cell and its neighbor.
+
+        Args:
+            pos (Point): Position of the source cell.
+            side (Wall): Wall side to open.
 
         Returns:
-            False if either are out of bounds or if one of cells is locked.
+            bool: True if wall was successfully opened, False if out of bounds
+                or if either cell is locked.
         """
         if not self.in_bounds(pos):
             return False
@@ -142,7 +154,14 @@ class Maze:
         return True
 
     def count_open_passages(self, pos: Point) -> int:
-        """Returns the number of open passages for a given cell."""
+        """Count the number of open passages for a given cell.
+
+        Args:
+            pos (Point): Coordinate of the cell to inspect.
+
+        Returns:
+            int: Number of open cardinal passages (0 to 4).
+        """
         cell = self.get_cell(pos)
         if cell.lock:
             return 0
@@ -153,11 +172,15 @@ class Maze:
         )
 
     def _is_3x3_window_open(self, x0: int, y0: int) -> bool:
-        """Checks if the 3x3 block {x0..x0+2}{y0..y0+2} has
-        all internal walls open.
+        """Check if a 3x3 block at (x0, y0) has all internal walls open.
 
-        Returns a bool indicating if for checked state of walls a 3*3
-        area would be open."""
+        Args:
+            x0 (int): Top-left X coordinate of the 3x3 block.
+            y0 (int): Top-left Y coordinate of the 3x3 block.
+
+        Returns:
+            bool: True if the 3x3 block forms an open room, False otherwise.
+        """
         for x in range(x0, x0 + 3):
             for y in range(y0, y0 + 3):
                 pos = Point(x, y)
@@ -172,11 +195,15 @@ class Maze:
         return True
 
     def would_create_3x3_room(self, pos: Point, side: Wall) -> bool:
-        """Simulates opening a wall and checks if it
-        would create a 3x3 open room.
+        """Simulate opening a wall and check if it creates an open 3x3 room.
 
-        Returns a bool indicating if removing a given wall at a given
-        position would create a 3*3 space."""
+        Args:
+            pos (Point): Position of the source cell.
+            side (Wall): Wall side to test.
+
+        Returns:
+            bool: True if removing the wall would create a 3x3 open room.
+        """
         dx, dy = side.get_direction()
         npos = Point(pos.x + dx, pos.y + dy)
         if not self.in_bounds(npos) or self.get_cell(npos).lock:
@@ -208,10 +235,11 @@ class Maze:
         return creates_room
 
     def is_ready(self) -> bool:
-        """Check if all non-locked cells have at least 1 wall carved out.
+        """Check if all non-locked cells have at least one wall carved out.
 
-        Returns a bool confirming if each cell other than locked has
-        at least 1 wall open."""
+        Returns:
+            bool: True if every unlocked cell has at least one open wall.
+        """
         for x in range(self._size.x):
             for y in range(self._size.y):
                 cell = self._maze[x][y]
@@ -223,8 +251,14 @@ class Maze:
 
     @staticmethod
     def path_to_directions(path: list[Point]) -> str:
-        """Converts a coordinate path into cardinal direction letters
-        (N, E, S, W) as required by the output file format."""
+        """Convert a coordinate path into cardinal direction letters.
+
+        Args:
+            path (list[Point]): Sequential list of coordinate points.
+
+        Returns:
+            str: String of uppercase direction characters (e.g. 'NNEESW').
+        """
         if len(path) < 2:
             return ""
         directions = []

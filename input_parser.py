@@ -5,14 +5,26 @@ from typing import Any
 
 
 class ConfigError(Exception):
-    """Custom exception raised for in
-    valid configuration files."""
+    """Exception raised for invalid maze configuration files."""
 
 
 def parse_config(file_path_str: str) -> dict[str, Any]:
     """Parse and validate a maze configuration file.
 
-    Checks relative to CWD first, then relative to the script's directory.
+    Resolves the file path relative to the current working directory first,
+    then falls back to the script's own directory.
+
+    Args:
+        file_path_str (str): Relative or absolute path to the config file.
+
+    Returns:
+        dict[str, Any]: Validated configuration dictionary with keys:
+            width, height, entry, exit, output_file, perfect, pattern_cells,
+            mazegen, pathfinding, seed, and any additional optional keys.
+
+    Raises:
+        FileNotFoundError: If the config file cannot be located.
+        ConfigError: If required keys are missing or values are invalid.
     """
     path = Path(file_path_str)
     if not path.is_file():

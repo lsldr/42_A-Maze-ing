@@ -6,15 +6,20 @@ from random import Random
 
 
 class DFSGen(MazeGenerator):
-    """Maze generator using random depht first search algorithm."""
+    """Maze generator using Randomized Depth-First Search (DFS) algorithm.
+
+    Attributes:
+        maze (Maze): Maze object to be worked on.
+    """
+
     def __init__(self, maze: Maze, rand: Random, perfect: bool = True) -> None:
-        """Initalize generator.
+        """Initialize generator.
 
         Args:
-            maze (Maze): Object to be worked on
-            rand (Random): Random number generator
+            maze (Maze): Object to be worked on.
+            rand (Random): Random number generator.
             perfect (bool): Defines if maze should have only
-                one solution (True) or more (False)
+                one solution (True) or more (False).
         """
         super().__init__(maze, rand, perfect)
         self._stack: list[Point] = []
@@ -25,9 +30,10 @@ class DFSGen(MazeGenerator):
         """Generate next step in maze generation.
 
         Returns:
-            modified maze
-            optional position of the last checked cell
-            optional stack of positions
+            tuple[Maze, Point | None, list[Point] | None]: A tuple containing:
+                - Maze: The modified maze instance.
+                - Point | None: Optional coordinate of the last checked cell.
+                - list[Point] | None: Optional stack of active search path.
         """
         # 1. Initialize DFS from random point
         if not self._stack and self.maze.entry not in self._visited:
@@ -72,7 +78,7 @@ class DFSGen(MazeGenerator):
         """Run generation to completion.
 
         Returns:
-            ready maze
+            Maze: The fully generated maze object.
         """
         while not self.maze.is_ready() and (
             self._stack or self.maze.entry not in self._visited
