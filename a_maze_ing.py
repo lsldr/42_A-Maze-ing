@@ -95,7 +95,7 @@ def run(config: dict[str, Any]) -> None:
     """Configure and start the application
 
     Creates window and start main application loop
-    Will only return when application stop
+    Will only return when the application stops
     """
     width = 1440
     height = 810
@@ -152,8 +152,10 @@ def main() -> None:
         # parsing from the file provided to the `configs` dict
         configs = parse_config(sys.argv[1].strip())
     except (FileNotFoundError, ConfigError) as e:
-        print(f"Error parsing configs with the provided filename:\n{e}",
-              file=sys.stderr)
+        print(
+            f"Error parsing configs with the provided filename:\n{e}",
+            file=sys.stderr,
+        )
         sys.exit()
 
     run(configs)
