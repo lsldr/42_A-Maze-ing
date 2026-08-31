@@ -94,7 +94,7 @@ class MazeManager:
         match algo:
             case "bfs":
                 return BFSPathfinder
-            case "astar" | "a*" | "a_star":
+            case "astar" | "a_star":
                 return AStarPathfinder
         return BFSPathfinder
 

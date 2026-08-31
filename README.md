@@ -9,6 +9,7 @@ Choices:
   - Mazegen algos: 
                 Randomized Depth-First Search (1)
                 Randomized Kruskal’s Algorithm (2)
+                Wilson's Algorithm (3)
   - Pathfinding algos:
                 Breadth-First Search (1)
                 A* Search (2)
