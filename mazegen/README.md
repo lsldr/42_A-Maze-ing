@@ -33,11 +33,10 @@ pip install mazegen
 
 ```python
 from mazegen import DFSGen, BFSPathfinder, Point, Maze
-from random import Random()
 
 # Generate a maze using Depth-First Search
-maze = Maze(Point(20, 20), Point(0, 0), Point(19, 19))
-generator = DFSGen(maze, Random())
+maze = Maze(size=Point(20, 20), entry=Point(1, 3), exit=Point(18, 18))
+generator = DFSGen(maze)
 generator.finish()
 
 # Find the shortest path through the maze
@@ -47,8 +46,8 @@ path = pathfinder.finish()
 print(f"Maze generated! Found path of length: {len(path)}")
 
 # Or generate step-by-step for visualization
-maze = Maze(Point(20, 20), Point(0, 0), Point(19, 19))
-generator = DFSGen(maze, Random())
+maze = Maze(Point(20, 20))
+generator = DFSGen(maze)
 while not generator.is_done():
     generator.next()  # Do one generation step
     # Update your GUI here
@@ -84,16 +83,15 @@ maze = generator.finish()
 **Example:**
 ```python
 from mazegen import DFSGen, Maze
-from random import Random
 
 # Create a 50x50 perfect maze
-maze = Maze(Point(50, 50), Point(0, 0), Point(40, 40))
-gen = DFSGen(maze=maze, rand=Random(), perfect=True)
+maze = Maze(Point(50, 50))
+gen = DFSGen(maze=maze, perfect=True)
 gen.finish()
 
 # Or create a braided maze (with multiple solutions)
-maze = Maze(Point(50, 50), Point(0, 0), Point(40, 40))
-gen = DFSGen(maze=maze, rand=Random(), perfect=False)
+maze = Maze(Point(50, 50))
+gen = DFSGen(maze=maze, perfect=False)
 maze = gen.finish()
 ```
 
@@ -125,12 +123,11 @@ maze = gen.finish()
 **Example:**
 ```python
 from mazegen import WilsonsGen, Maze
-from random import Random
 
 # Create a 50x50 maze using Wilson's Algorithm
-maze()
-gen = WilsonsGen(width=50, height=50)
-maze = gen.generate()
+maze = Maze(Point(50, 50))
+gen = WilsonsGen(maze)
+maze = gen.finish()
 ```
 
 ---
@@ -162,11 +159,12 @@ maze = gen.generate()
 
 **Example:**
 ```python
-from mazegen import IRK_Gen
+from mazegen import IRK_Gen, Maze
 
 # Create a 50x50 maze using Iterative Randomized Kruskal's
-gen = IRK_Gen(width=50, height=50)
-maze = gen.generate()
+maze = Maze(Point(50, 50))
+gen = IRK_Gen(maze)
+maze = gen.finish()
 ```
 
 ---
@@ -213,11 +211,12 @@ maze = gen.generate()
 
 **Example:**
 ```python
-from mazegen import DFSGen, BFSPathfinder, Point
+from mazegen import DFSGen, BFSPathfinder, Point, Maze
 
-maze = DFSGen(width=20, height=20).generate()
+maze = Maze(size=Point(20, 20), entry=Point(0, 0), exit=Point(0, 0))
+maze = DFSGen(maze).finish()
 pathfinder = BFSPathfinder(maze)
-path = pathfinder.find_path(Point(0, 0), Point(19, 19))
+path = pathfinder.finish()
 
 print(f"Shortest path: {len(path)} steps")
 ```
@@ -269,9 +268,10 @@ This heuristic is **admissible** (never overestimates actual distance), guarante
 ```python
 from mazegen import DFSGen, AStarPathfinder, Point
 
-maze = DFSGen(width=100, height=100).generate()
+maze = Maze(size=Point(100, 100), entry=Point(0, 0), exit=Point(99, 99))
+maze = DFSGen(maze).finish()
 pathfinder = AStarPathfinder(maze)
-path = pathfinder.find_path(Point(0, 0), Point(99, 99))
+path = pathfinder.finish()
 
 print(f"A* found path: {len(path)} steps")
 ```
@@ -291,33 +291,31 @@ print(f"A* found path: {len(path)} steps")
 
 All generators inherit from `MazeGenerator` base class and support step-by-step generation. The `MazeGenerator` base class already has the maze braiding method.
 
-#### `DFSGen(width, height, perfect=True, seed=None)`
+#### `DFSGen(maze, perfect=True, seed=None)`
 Randomized Depth-First Search maze generator.
 - **Parameters:**
-  - `width`: Maze width in cells
-  - `height`: Maze height in cells
+  - `maze`: Maze object
   - `perfect`: If True, creates perfect maze; if False, removes dead ends (default: True)
-  - `seed`: Random seed for reproducibility (optional)
+  - `rand`: Random seed for reproducibility or Random class object (optional)
 
 #### `WilsonsGen(width, height, seed=None)`
 Wilson's Algorithm maze generator (always creates perfect mazes).
 - **Parameters:**
-  - `width`: Maze width in cells
-  - `height`: Maze height in cells
-  - `seed`: Random seed for reproducibility (optional)
+  - `maze`: Maze object
+  - `perfect`: If True, creates perfect maze; if False, removes dead ends (default: True)
+  - `rand`: Random seed for reproducibility or Random class object (optional)
 
 #### `IRK_Gen(width, height, perfect=True, seed=None)`
 Iterative Randomized Kruskal's maze generator.
 - **Parameters:**
-  - `width`: Maze width in cells
-  - `height`: Maze height in cells
+  - `maze`: Maze object
   - `perfect`: If True, creates perfect maze; if False, removes dead ends (default: True)
-  - `seed`: Random seed for reproducibility (optional)
+  - `rand`: Random seed for reproducibility or Random class object (optional)
 
 ### Generator Methods
 
 ```python
-gen = DFSGen(width=20, height=20)
+gen = DFSGen(maze)
 
 # Step-by-step generation (for visualization)
 while not gen.is_done():
@@ -327,7 +325,7 @@ while not gen.is_done():
 maze = gen.finish()
 
 # Or generate in one call
-maze = DFSGen(width=20, height=20).generate()
+maze = DFSGen(maze).finish()
 ```
 
 ### Pathfinders
@@ -355,10 +353,7 @@ while not pathfinder.is_done():
 path = pathfinder.get_path()
 
 # Or find path in one call
-path = BFSPathfinder(maze).find_path(
-    start=Point(0, 0),
-    end=Point(19, 19)
-)
+path = BFSPathfinder(maze).finish()
 ```
 
 ### Core Classes
@@ -366,16 +361,17 @@ path = BFSPathfinder(maze).find_path(
 #### `Maze`
 Represents a complete maze structure.
 - **Properties:**
-  - `width`: Maze width
-  - `height`: Maze height
-  - `cells`: 2D array of Cell objects
+  - `size`: named tuple Point descripting width (x) and height (y) of the maze
+  - `entry`: entry point coordinates
+  - `exit`: exit point coordinates
+  - `grid`: 2D array of Cell objects
 
 #### `Cell`
 Represents a single maze cell.
 - **Properties:**
   - `walls`: Bitmask indicating which walls are present
   - `visited`: Whether cell has been visited during generation
-  - `lock`: Whether cell is locked (immutable during generation)
+  - `lock`: Whether cell is locked
 
 #### `Point(x, y)`
 Simple 2D coordinate representation for positions in the maze.
@@ -395,7 +391,7 @@ in bits in positions of 0 to 3 of the bit mask.
 
 1. **For Large Mazes:** Use A* pathfinding instead of BFS
 2. **For Visual Generation:** Use `next()` method with step-by-step generation
-3. **For Reproducibility:** Provide `seed` parameter to generators
+3. **For Reproducibility:** Provide `rand` parameter to generators
 4. **For Balanced Mazes:** Use Wilson's or IRK algorithms
 5. **For Speed:** Use DFS algorithm
 

@@ -7,8 +7,8 @@ OUTPUT_FILE=maze.txt
 #default: False
 PERFECT=False			# if maze should have only one path (true) or more
 
-# seed for maze gen, can be int, none or just ommited
-# to use default
+# seed for maze gen, can be int, string, none or just ommited to use default
+# on none system time will be used as seed
 # defailt: none
 SEED=42
 
