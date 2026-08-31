@@ -5,7 +5,9 @@ import sys
 
 from mazegen import IRK_Gen, DFSGen, WilsonsGen, Maze, Point, MazeGenerator
 
-sizes = [(3, 3), (5, 7), (10, 10), (20, 15)]
+ROOT = Path(__file__).resolve().parent.parent
+ANALYZER = ROOT / "test_scripts" / "maze_analyzer.py"
+SIZES = [(3, 3), (5, 7), (10, 10), (20, 15)]
 
 if len(sys.argv) != 2:
     print("Provide an argument with the mazegen class name to test!")
@@ -18,9 +20,11 @@ if raw_arg_name not in ["IRK_Gen", "DFSGen", "WilsonsGen"]:
     print("Accepted class names: [IRK_Gen, DFSGen, WilsonsGen]")
     sys.exit(1)
 
-for width, height in sizes:
+for width, height in SIZES:
     for perfect in (True, False):
-        path = Path(f"/tmp/irk_{width}x{height}_{perfect}.txt")
+        path = Path(
+            f"/tmp/{raw_arg_name.lower()}_{width}x{height}_{perfect}.txt"
+        )
 
         maze = Maze(
             Point(width, height),
@@ -35,7 +39,7 @@ for width, height in sizes:
         elif raw_arg_name == "WilsonsGen":
             generator = WilsonsGen(maze, Random(42), perfect)
         generator.finish()
-        path.write_text(str(maze))
+        path.write_text(str(maze), encoding="utf-8")
 
         print(f"=== {width}x{height}, PERFECT={perfect} ===")
         result = run(
@@ -43,7 +47,7 @@ for width, height in sizes:
                 "uv",
                 "run",
                 "python",
-                "maze_analyzer.py",
+                str(ANALYZER),
                 str(path),
                 "--min-loops",
                 "0",
@@ -52,5 +56,9 @@ for width, height in sizes:
             ],
             capture_output=True,
             text=True,
+            check=False,
         )
         print(result.stdout)
+        if result.returncode != 0:
+            print(result.stderr, file=sys.stderr)
+            sys.exit(result.returncode)

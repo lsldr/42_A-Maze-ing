@@ -159,7 +159,7 @@ def parse_config(file_path_str: str) -> dict[str, Any]:
             pathfind = pathfind.lower()
         else:
             print(
-                f"Unnknown pathfinding algorithm {pathfind}, defaulting to bfs",
+                f"Unknown pathfinding algorithm {pathfind}, defaulting to bfs",
                 file=sys.stderr,
             )
             pathfind = "bfs"
