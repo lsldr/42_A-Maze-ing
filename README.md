@@ -156,6 +156,10 @@ This makes the generation and solving logic modular and reusable in tests, scrip
 
 The project has a modular architecture, with the `mazegen` package taking responsibility for all reusable logic. This separation improved clarity and made it easier to test pathfinding and generation independently from the GUI.
 
+### Acticipation
+Orginal plan was to have simple program with animated generation and pathfinding of the maze,
+later we added ability to skip animation and rerun with new random seed or with the old one.
+
 ### What worked well
 
 - Clear separation between domain logic and display logic

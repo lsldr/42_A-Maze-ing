@@ -33,11 +33,11 @@ for width, height in SIZES:
         )
         generator: MazeGenerator
         if raw_arg_name == "IRK_Gen":
-            generator = IRK_Gen(maze, Random(42), perfect)
+            generator = IRK_Gen(maze, perfect, Random(42))
         elif raw_arg_name == "DFSGen":
-            generator = DFSGen(maze, Random(42), perfect)
+            generator = DFSGen(maze, perfect, Random(42))
         elif raw_arg_name == "WilsonsGen":
-            generator = WilsonsGen(maze, Random(42), perfect)
+            generator = WilsonsGen(maze, perfect, Random(42))
         generator.finish()
         path.write_text(str(maze), encoding="utf-8")
 

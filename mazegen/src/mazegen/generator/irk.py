@@ -13,9 +13,10 @@ class IRK_Gen(MazeGenerator):
         maze (Maze): Maze object to be worked on.
     """
 
-    def __init__(self, maze: Maze,
-                 perfect: bool = False,
-                 rand: float | str | Random | None = None
+    def __init__(
+            self, maze: Maze,
+            perfect: bool = False,
+            rand: float | str | Random | None = None
             ) -> None:
         """Initialize generator.
 

@@ -16,7 +16,7 @@ class DFSGen(MazeGenerator):
             self, maze: Maze,
             perfect: bool = True,
             rand: float | str | Random | None = None
-        ) -> None:
+            ) -> None:
         """Initialize generator.
 
         Args:
