@@ -32,20 +32,23 @@ pip install mazegen
 ## Quick Start
 
 ```python
-from mazegen import DFSGen, BFSPathfinder, Point
+from mazegen import DFSGen, BFSPathfinder, Point, Maze
+from random import Random()
 
 # Generate a maze using Depth-First Search
-generator = DFSGen(width=20, height=20)
-maze = generator.generate()
+maze = Maze(Point(20, 20), Point(0, 0), Point(19, 19))
+generator = DFSGen(maze, Random())
+generator.finish()
 
 # Find the shortest path through the maze
 pathfinder = BFSPathfinder(maze)
-path = pathfinder.find_path(Point(0, 0), Point(19, 19))
+path = pathfinder.finish()
 
 print(f"Maze generated! Found path of length: {len(path)}")
 
 # Or generate step-by-step for visualization
-generator = DFSGen(width=20, height=20)
+maze = Maze(Point(20, 20), Point(0, 0), Point(19, 19))
+generator = DFSGen(maze, Random())
 while not generator.is_done():
     generator.next()  # Do one generation step
     # Update your GUI here
@@ -80,15 +83,18 @@ maze = generator.finish()
 
 **Example:**
 ```python
-from mazegen import DFSGen
+from mazegen import DFSGen, Maze
+from random import Random
 
 # Create a 50x50 perfect maze
-gen = DFSGen(width=50, height=50, perfect=True)
-maze = gen.generate()
+maze = Maze(Point(50, 50), Point(0, 0), Point(40, 40))
+gen = DFSGen(maze=maze, rand=Random(), perfect=True)
+gen.finish()
 
 # Or create a braided maze (with multiple solutions)
-gen = DFSGen(width=50, height=50, perfect=False)
-maze = gen.generate()
+maze = Maze(Point(50, 50), Point(0, 0), Point(40, 40))
+gen = DFSGen(maze=maze, rand=Random(), perfect=False)
+maze = gen.finish()
 ```
 
 ---
@@ -118,9 +124,11 @@ maze = gen.generate()
 
 **Example:**
 ```python
-from mazegen import WilsonsGen
+from mazegen import WilsonsGen, Maze
+from random import Random
 
 # Create a 50x50 maze using Wilson's Algorithm
+maze()
 gen = WilsonsGen(width=50, height=50)
 maze = gen.generate()
 ```
