@@ -14,8 +14,8 @@ class MazeGenerator(ABC):
 
     def __init__(
         self, maze: Maze,
-        rand: Random | float | str | None = None,
-        perfect: bool = False
+        perfect: bool = False,
+        rand: Random | float | str | None = None
     ) -> None:
         """Initialize generator.
 
