@@ -7,92 +7,92 @@ from mazegen.util import Point
 class TestPoint:
     """Test cases for Point class."""
 
-    def test_point_creation(self):
+    def test_point_creation(self) -> None:
         """Test creating a Point with x and y coordinates."""
-        p = Point(3, 5)
+        p: Point = Point(3, 5)
         assert p.x == 3
         assert p.y == 5
 
-    def test_point_zero(self):
+    def test_point_zero(self) -> None:
         """Test creating a Point at origin."""
-        p = Point(0, 0)
+        p: Point = Point(0, 0)
         assert p.x == 0
         assert p.y == 0
 
-    def test_point_negative_coordinates(self):
+    def test_point_negative_coordinates(self) -> None:
         """Test creating a Point with negative coordinates."""
-        p = Point(-10, -20)
+        p: Point = Point(-10, -20)
         assert p.x == -10
         assert p.y == -20
 
-    def test_point_equality(self):
+    def test_point_equality(self) -> None:
         """Test Point equality comparison."""
-        p1 = Point(3, 5)
-        p2 = Point(3, 5)
-        p3 = Point(4, 5)
+        p1: Point = Point(3, 5)
+        p2: Point = Point(3, 5)
+        p3: Point = Point(4, 5)
 
         assert p1 == p2
         assert p1 != p3
 
-    def test_point_immutability(self):
+    def test_point_immutability(self) -> None:
         """Test that Point is immutable."""
-        p = Point(3, 5)
+        p: Point = Point(3, 5)
         with pytest.raises(AttributeError):
-            p.x = 10
+            object.__setattr__(p, "x", 10)
 
-    def test_point_hashable(self):
+    def test_point_hashable(self) -> None:
         """Test that Point can be used in sets and as dict keys."""
-        p1 = Point(3, 5)
-        p2 = Point(3, 5)
-        p3 = Point(4, 5)
+        p1: Point = Point(3, 5)
+        p2: Point = Point(3, 5)
+        p3: Point = Point(4, 5)
 
-        # Can be used in a set
-        point_set = {p1, p2, p3}
-        assert len(point_set) == 2  # p1 and p2 should be the same
+        point_set: set[Point] = {p1, p2, p3}
+        assert len(point_set) == 2
 
-        # Can be used as dict key
-        point_dict = {p1: "first", p3: "third"}
-        assert point_dict[p2] == "first"  # p2 should match p1
+        point_dict: dict[Point, str] = {p1: "first", p3: "third"}
+        assert point_dict[p2] == "first"
 
-    def test_point_unpacking(self):
+    def test_point_unpacking(self) -> None:
         """Test that Point can be unpacked."""
-        p = Point(7, 11)
+        p: Point = Point(7, 11)
+        x: int
+        y: int
         x, y = p
         assert x == 7
         assert y == 11
 
-    def test_point_tuple_behavior(self):
+    def test_point_tuple_behavior(self) -> None:
         """Test that Point behaves like a tuple."""
-        p = Point(3, 5)
+        p: Point = Point(3, 5)
         assert p[0] == 3
         assert p[1] == 5
         assert len(p) == 2
 
-    def test_point_iteration(self):
+    def test_point_iteration(self) -> None:
         """Test that Point can be iterated."""
-        p = Point(2, 8)
-        coords = list(p)
+        p: Point = Point(2, 8)
+        coords: list[int] = list(p)
         assert coords == [2, 8]
 
-    def test_point_repr(self):
+    def test_point_repr(self) -> None:
         """Test Point string representation."""
-        p = Point(3, 5)
+        p: Point = Point(3, 5)
         assert "Point" in repr(p) or "x=3" in repr(p)
 
-    def test_point_large_coordinates(self):
+    def test_point_large_coordinates(self) -> None:
         """Test Point with large coordinates."""
-        p = Point(1000000, 2000000)
+        p: Point = Point(1000000, 2000000)
         assert p.x == 1000000
         assert p.y == 2000000
 
-    def test_point_in_list(self):
+    def test_point_in_list(self) -> None:
         """Test Point in list operations."""
-        points = [Point(1, 1), Point(2, 2), Point(3, 3)]
+        points: list[Point] = [Point(1, 1), Point(2, 2), Point(3, 3)]
         assert Point(2, 2) in points
         assert Point(5, 5) not in points
 
-    def test_point_equality_with_tuple(self):
+    def test_point_equality_with_tuple(self) -> None:
         """Test Point equality with regular tuple."""
-        p = Point(3, 5)
+        p: Point = Point(3, 5)
         assert p == (3, 5)
         assert (3, 5) == p

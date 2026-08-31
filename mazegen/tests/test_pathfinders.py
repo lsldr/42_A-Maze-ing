@@ -13,37 +13,43 @@ from mazegen.cell import Wall
 class TestBFSPathfinder:
     """Test cases for BFSPathfinder."""
 
-    def test_bfs_pathfinder_creation(self):
+    def test_bfs_pathfinder_creation(self) -> None:
         """Test creating a BFSPathfinder."""
-        maze = Maze(size=Point(10, 10), entry=Point(0, 0), exit=Point(9, 9))
-        pathfinder = BFSPathfinder(maze=maze)
+        maze: Maze = Maze(
+            size=Point(10, 10), entry=Point(0, 0), exit=Point(9, 9)
+        )
+        pathfinder: BFSPathfinder = BFSPathfinder(maze=maze)
         assert pathfinder is not None
         assert pathfinder.maze == maze
 
-    def test_bfs_find_path_simple(self):
+    def test_bfs_find_path_simple(self) -> None:
         """Test BFS finding path in a generated maze."""
-        maze = Maze(size=Point(10, 10), entry=Point(0, 0), exit=Point(9, 9))
+        maze: Maze = Maze(
+            size=Point(10, 10), entry=Point(0, 0), exit=Point(9, 9)
+        )
 
-        gen = DFSGen(maze=maze, rand=Random(42), perfect=True)
+        gen: DFSGen = DFSGen(maze=maze, rand=Random(42), perfect=True)
         gen.finish()
 
-        pathfinder = BFSPathfinder(maze=maze)
-        path = pathfinder.finish()
+        pathfinder: BFSPathfinder = BFSPathfinder(maze=maze)
+        path: list[Point] = pathfinder.finish()
 
         assert path is not None
         assert len(path) > 0
         assert path[0] == maze.entry
         assert path[-1] == maze.exit
 
-    def test_bfs_path_continuity(self):
+    def test_bfs_path_continuity(self) -> None:
         """Test that BFS path is continuous (adjacent cells)."""
-        maze = Maze(size=Point(10, 10), entry=Point(0, 0), exit=Point(9, 9))
+        maze: Maze = Maze(
+            size=Point(10, 10), entry=Point(0, 0), exit=Point(9, 9)
+        )
 
-        gen = DFSGen(maze=maze, rand=Random(42), perfect=True)
+        gen: DFSGen = DFSGen(maze=maze, rand=Random(42), perfect=True)
         gen.finish()
 
-        pathfinder = BFSPathfinder(maze=maze)
-        path = pathfinder.finish()
+        pathfinder: BFSPathfinder = BFSPathfinder(maze=maze)
+        path: list[Point] = pathfinder.finish()
 
         for i in range(len(path) - 1):
             current = path[i]
@@ -53,14 +59,16 @@ class TestBFSPathfinder:
             )
             assert distance == 1
 
-    def test_bfs_is_done_flag(self):
+    def test_bfs_is_done_flag(self) -> None:
         """Test BFS is_done flag."""
-        maze = Maze(size=Point(10, 10), entry=Point(0, 0), exit=Point(9, 9))
+        maze: Maze = Maze(
+            size=Point(10, 10), entry=Point(0, 0), exit=Point(9, 9)
+        )
 
-        gen = DFSGen(maze=maze, rand=Random(42), perfect=True)
+        gen: DFSGen = DFSGen(maze=maze, rand=Random(42), perfect=True)
         gen.finish()
 
-        pathfinder = BFSPathfinder(maze=maze)
+        pathfinder: BFSPathfinder = BFSPathfinder(maze=maze)
 
         assert not pathfinder.is_done()
 
@@ -68,17 +76,19 @@ class TestBFSPathfinder:
 
         assert pathfinder.is_done()
 
-    def test_bfs_get_path(self):
+    def test_bfs_get_path(self) -> None:
         """Test getting the path from pathfinder."""
-        maze = Maze(size=Point(10, 10), entry=Point(0, 0), exit=Point(9, 9))
+        maze: Maze = Maze(
+            size=Point(10, 10), entry=Point(0, 0), exit=Point(9, 9)
+        )
 
-        gen = DFSGen(maze=maze, rand=Random(42), perfect=True)
+        gen: DFSGen = DFSGen(maze=maze, rand=Random(42), perfect=True)
         gen.finish()
 
-        pathfinder = BFSPathfinder(maze=maze)
+        pathfinder: BFSPathfinder = BFSPathfinder(maze=maze)
         pathfinder.finish()
 
-        path = pathfinder.get_path()
+        path: list[Point] = pathfinder.get_path()
         assert path is not None
         assert len(path) > 0
 
@@ -86,37 +96,43 @@ class TestBFSPathfinder:
 class TestAStarPathfinder:
     """Test cases for AStarPathfinder."""
 
-    def test_astar_pathfinder_creation(self):
+    def test_astar_pathfinder_creation(self) -> None:
         """Test creating an AStarPathfinder."""
-        maze = Maze(size=Point(10, 10), entry=Point(0, 0), exit=Point(9, 9))
-        pathfinder = AStarPathfinder(maze=maze)
+        maze: Maze = Maze(
+            size=Point(10, 10), entry=Point(0, 0), exit=Point(9, 9)
+        )
+        pathfinder: AStarPathfinder = AStarPathfinder(maze=maze)
         assert pathfinder is not None
         assert pathfinder.maze == maze
 
-    def test_astar_find_path_simple(self):
+    def test_astar_find_path_simple(self) -> None:
         """Test A* finding path in a generated maze."""
-        maze = Maze(size=Point(10, 10), entry=Point(0, 0), exit=Point(9, 9))
+        maze: Maze = Maze(
+            size=Point(10, 10), entry=Point(0, 0), exit=Point(9, 9)
+        )
 
-        gen = DFSGen(maze=maze, rand=Random(42), perfect=True)
+        gen: DFSGen = DFSGen(maze=maze, rand=Random(42), perfect=True)
         gen.finish()
 
-        pathfinder = AStarPathfinder(maze=maze)
-        path = pathfinder.finish()
+        pathfinder: AStarPathfinder = AStarPathfinder(maze=maze)
+        path: list[Point] = pathfinder.finish()
 
         assert path is not None
         assert len(path) > 0
         assert path[0] == maze.entry
         assert path[-1] == maze.exit
 
-    def test_astar_path_continuity(self):
+    def test_astar_path_continuity(self) -> None:
         """Test that A* path is continuous."""
-        maze = Maze(size=Point(10, 10), entry=Point(0, 0), exit=Point(9, 9))
+        maze: Maze = Maze(
+            size=Point(10, 10), entry=Point(0, 0), exit=Point(9, 9)
+        )
 
-        gen = DFSGen(maze=maze, rand=Random(42), perfect=True)
+        gen: DFSGen = DFSGen(maze=maze, rand=Random(42), perfect=True)
         gen.finish()
 
-        pathfinder = AStarPathfinder(maze=maze)
-        path = pathfinder.finish()
+        pathfinder: AStarPathfinder = AStarPathfinder(maze=maze)
+        path: list[Point] = pathfinder.finish()
 
         for i in range(len(path) - 1):
             current = path[i]
@@ -126,14 +142,16 @@ class TestAStarPathfinder:
             )
             assert distance == 1
 
-    def test_astar_is_done_flag(self):
+    def test_astar_is_done_flag(self) -> None:
         """Test A* is_done flag."""
-        maze = Maze(size=Point(10, 10), entry=Point(0, 0), exit=Point(9, 9))
+        maze: Maze = Maze(
+            size=Point(10, 10), entry=Point(0, 0), exit=Point(9, 9)
+        )
 
-        gen = DFSGen(maze=maze, rand=Random(42), perfect=True)
+        gen: DFSGen = DFSGen(maze=maze, rand=Random(42), perfect=True)
         gen.finish()
 
-        pathfinder = AStarPathfinder(maze=maze)
+        pathfinder: AStarPathfinder = AStarPathfinder(maze=maze)
 
         assert not pathfinder.is_done()
 
@@ -145,38 +163,46 @@ class TestAStarPathfinder:
 class TestPathfinderComparison:
     """Test comparing different pathfinders."""
 
-    def test_both_pathfinders_find_same_length_path(self):
+    def test_both_pathfinders_find_same_length_path(self) -> None:
         """Test that both pathfinders find paths of same length."""
-        # Create same maze twice with same seed
-        maze1 = Maze(size=Point(15, 15), entry=Point(0, 0), exit=Point(14, 14))
-        gen1 = DFSGen(maze=maze1, rand=Random(42), perfect=True)
+        maze1: Maze = Maze(
+            size=Point(15, 15), entry=Point(0, 0), exit=Point(14, 14)
+        )
+        gen1: DFSGen = DFSGen(maze=maze1, rand=Random(42), perfect=True)
         gen1.finish()
 
-        bfs_pathfinder = BFSPathfinder(maze=maze1)
-        bfs_path = bfs_pathfinder.finish()
+        bfs_pathfinder: BFSPathfinder = BFSPathfinder(maze=maze1)
+        bfs_path: list[Point] = bfs_pathfinder.finish()
 
-        # Generate same maze structure with same seed
-        maze2 = Maze(size=Point(15, 15), entry=Point(0, 0), exit=Point(14, 14))
-        gen2 = DFSGen(maze=maze2, rand=Random(42), perfect=True)
+        maze2: Maze = Maze(
+            size=Point(15, 15), entry=Point(0, 0), exit=Point(14, 14)
+        )
+        gen2: DFSGen = DFSGen(maze=maze2, rand=Random(42), perfect=True)
         gen2.finish()
 
-        astar_pathfinder = AStarPathfinder(maze=maze2)
-        astar_path = astar_pathfinder.finish()
+        astar_pathfinder: AStarPathfinder = AStarPathfinder(maze=maze2)
+        astar_path: list[Point] = astar_pathfinder.finish()
 
-        # Both should find paths of same length (optimal)
         assert len(bfs_path) == len(astar_path)
 
-    def test_pathfinders_on_simple_maze(self):
+    def test_pathfinders_on_simple_maze(self) -> None:
         """Test pathfinders on a simple manually-created maze."""
-        maze = Maze(size=Point(3, 3), entry=Point(0, 0), exit=Point(2, 0))
+        maze: Maze = Maze(
+            size=Point(3, 3), entry=Point(0, 0), exit=Point(2, 0)
+        )
 
-        # Create a simple straight line: (0,0) -> (1,0) -> (2,0)
         maze.try_open_wall(Point(0, 0), Wall.EAST)
         maze.try_open_wall(Point(1, 0), Wall.EAST)
 
-        for PathfinderClass in [BFSPathfinder, AStarPathfinder]:
+        pathfinder_types: tuple[
+            type[BFSPathfinder] | type[AStarPathfinder], ...
+        ] = (
+            BFSPathfinder,
+            AStarPathfinder,
+        )
+        for PathfinderClass in pathfinder_types:
             pathfinder = PathfinderClass(maze=maze)
-            path = pathfinder.finish()
+            path: list[Point] = pathfinder.finish()
 
             assert path is not None
             assert len(path) == 3
