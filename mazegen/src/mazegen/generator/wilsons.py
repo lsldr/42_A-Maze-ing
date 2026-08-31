@@ -13,7 +13,9 @@ class WilsonsGen(MazeGenerator):
     """
 
     def __init__(
-        self, maze: Maze, rand: Random, perfect: bool = False
+        self, maze: Maze,
+        perfect: bool = False,
+        rand: Random | float | str | None = None
     ) -> None:
         """Initialize generator.
 
@@ -23,12 +25,12 @@ class WilsonsGen(MazeGenerator):
             perfect (bool): Defines if maze should have only
                 one solution (True) or more (False).
         """
-        super().__init__(maze, rand, perfect)
+        super().__init__(maze, perfect, rand)
         self._avalible = {
             Point(x, y) for x in range(maze.size.x) for y in range(maze.size.y)
         }
         self._avalible.difference_update(self.maze.pattern_cells)
-        pos = rand.choice(list(self._avalible))
+        pos = self._rand.choice(list(self._avalible))
         maze.get_cell(pos).visited = True
         self._avalible.discard(pos)
         self._path: list[Point] = []

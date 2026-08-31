@@ -1,12 +1,11 @@
 """Tests for mazegen maze generator modules - FIXED VERSION."""
 
-from random import Random
-
+from mazegen.generator.dfs import DFSGen
+from mazegen.generator.irk import IRK_Gen
+from mazegen.generator.wilsons import WilsonsGen
 from mazegen.maze import Maze
 from mazegen.util import Point
-from mazegen.generator.dfs import DFSGen
-from mazegen.generator.wilsons import WilsonsGen
-from mazegen.generator.irk import IRK_Gen
+from random import Random
 
 
 class TestDFSGen:
@@ -209,7 +208,7 @@ class TestGeneratorComparison:
     def test_all_generators_produce_mazes(self) -> None:
         """Test that all three generators can produce mazes."""
         generator_types: tuple[
-            type[DFSGen] | type[WilsonsGen] | type[IRK_Gen], ...
+            type[DFSGen | WilsonsGen | IRK_Gen], ...
         ] = (
             DFSGen,
             WilsonsGen,
@@ -234,7 +233,7 @@ class TestGeneratorComparison:
     def test_generators_with_small_maze(self) -> None:
         """Test that generators work with minimal maze size."""
         generator_types: tuple[
-            type[DFSGen] | type[WilsonsGen] | type[IRK_Gen], ...
+            type[DFSGen | WilsonsGen | IRK_Gen], ...
         ] = (
             DFSGen,
             WilsonsGen,

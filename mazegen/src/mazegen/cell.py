@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from enum import Flag
 from mazegen.util import Point
 

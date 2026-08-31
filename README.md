@@ -27,8 +27,7 @@ The program can generate mazes using different algorithms, then solve them with 
 From the project root:
 
 ```bash
-cd /home/aman/42/A-Maze-ing
-uv sync
+make install
 ```
 
 This installs the workspace dependencies and makes the local `mazegen` package available to the application environment.
@@ -36,7 +35,10 @@ This installs the workspace dependencies and makes the local `mazegen` package a
 ### Run the application
 
 ```bash
-cd /home/aman/42/A-Maze-ing
+make run
+```
+or
+```bash
 uv run a_maze_ing.py config.txt
 ```
 
@@ -44,7 +46,7 @@ uv run a_maze_ing.py config.txt
 
 ```bash
 cd /home/aman/42/A-Maze-ing/mazegen
-uv build
+uv build --package=mazegen
 python -m pip install --force-reinstall ./dist/mazegen-*.whl
 ```
 
@@ -57,7 +59,6 @@ from mazegen import DFSGen, BFSPathfinder, Maze, Point
 ### Run tests quickly
 
 ```bash
-cd /home/aman/42/A-Maze-ing
 make pytest-fast
 ```
 
@@ -70,7 +71,6 @@ make pytest-verbose
 ### Linting
 
 ```bash
-cd /home/aman/42/A-Maze-ing
 make lint
 ```
 
@@ -87,18 +87,18 @@ EXIT=9,9
 OUTPUT_FILE=maze.txt
 PERFECT=False
 
-# seed for maze generation, can be int, none or omitted
+# seed for maze generation, can be int, string, none or omitted
 SEED=42
 
 # algorithm for maze generation
 # available: dfs, wilson, irk
 # default: dfs
-MAZEGEN=wilson
+MAZEGEN=dfs
 
 # pathfinding algorithm
 # available: bfs, astar
 # default: bfs
-# PATHFINDING=astar
+PATHFINDING=bfs
 ```
 
 ### Field descriptions
@@ -155,6 +155,10 @@ This makes the generation and solving logic modular and reusable in tests, scrip
 ### Modularity
 
 The project has a modular architecture, with the `mazegen` package taking responsibility for all reusable logic. This separation improved clarity and made it easier to test pathfinding and generation independently from the GUI.
+
+### Acticipation
+Orginal plan was to have simple program with animated generation and pathfinding of the maze,
+later we added ability to skip animation and rerun with new random seed or with the old one.
 
 ### What worked well
 

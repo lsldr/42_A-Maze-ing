@@ -12,7 +12,11 @@ class DFSGen(MazeGenerator):
         maze (Maze): Maze object to be worked on.
     """
 
-    def __init__(self, maze: Maze, rand: Random, perfect: bool = True) -> None:
+    def __init__(
+            self, maze: Maze,
+            perfect: bool = True,
+            rand: float | str | Random | None = None
+            ) -> None:
         """Initialize generator.
 
         Args:
@@ -21,7 +25,7 @@ class DFSGen(MazeGenerator):
             perfect (bool): Defines if maze should have only
                 one solution (True) or more (False).
         """
-        super().__init__(maze, rand, perfect)
+        super().__init__(maze, perfect, rand)
         self._stack: list[Point] = []
         # Pre-populate visited with 42 pattern cells so DFS ignores them
         self._visited: set[Point] = set(self.maze.pattern_cells)
