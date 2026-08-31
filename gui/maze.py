@@ -52,7 +52,7 @@ class MazeManager:
         self._maze = Maze(Point(width, height), entry, exit, pattern)
         self._rand = Random(seed)
         self._rand_init_state = self._rand.getstate()
-        self._mazegen = gen(self._maze, self._rand, config["perfect"])
+        self._mazegen = gen(self._maze, config["perfect"], self._rand)
         self._pathfind = solv(self._maze)
         self._state = self.State.MAZEGEN
         self._first_maze = True  # only first maze will be written to file
@@ -124,7 +124,7 @@ class MazeManager:
             )
         self._first_maze = False
 
-    def tick(self, prog: gp.Program) -> None:
+    def tick(self, prog: "gp.Program") -> None:
         """Advance maze generation or pathfinding state by one tick.
 
         Args:
@@ -144,7 +144,7 @@ class MazeManager:
             elif prog.event == gp.Event.MAZE_NEW_RANDOM:
                 self._rand = Random()
                 self._rand_init_state = self._rand.getstate()
-            self._mazegen = gen(self._maze, self._rand, perfect)
+            self._mazegen = gen(self._maze, perfect, self._rand)
             self._pathfind = solv(self._maze)
             self._maze_gen_last = None
             self._maze_gen_stack = None
@@ -194,7 +194,7 @@ class MazeManager:
         if prog.quit:
             self._output_first(prog.config["output_file"])
 
-    def draw(self, img: Image, prog: gp.Program) -> None:
+    def draw(self, img: Image, prog: "gp.Program") -> None:
         """Draw the current maze, active cells, and path onto an image canvas.
 
         Args:

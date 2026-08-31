@@ -13,9 +13,10 @@ class IRK_Gen(MazeGenerator):
         maze (Maze): Maze object to be worked on.
     """
 
-    def __init__(
-        self, maze: Maze, rand: Random, perfect: bool = False
-    ) -> None:
+    def __init__(self, maze: Maze,
+                 perfect: bool = False,
+                 rand: float | str | Random | None = None
+            ) -> None:
         """Initialize generator.
 
         Args:
@@ -24,7 +25,7 @@ class IRK_Gen(MazeGenerator):
             perfect (bool): Defines if maze should have only
                 one solution (True) or more (False).
         """
-        super().__init__(maze, rand, perfect)
+        super().__init__(maze, perfect, rand)
         self._walls_list = self._make_wall_list()
         self._cells_dset = self._get_cell_dset()
         self._cells_stack: list[Point] = []

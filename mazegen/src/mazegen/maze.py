@@ -16,23 +16,27 @@ class Maze:
     def __init__(
         self,
         size: Point,
-        entry: Point,
-        exit: Point,
+        entry: Point | None = None,
+        exit: Point | None = None,
         pattern_cells: set[tuple[int, int]] | set[Point] | None = None,
     ) -> None:
         """Initialize the maze grid and boundaries.
 
         Args:
             size (Point): Dimensions (width, height) of the maze.
-            entry (Point): Coordinates of the entry cell.
-            exit (Point): Coordinates of the exit cell.
-            pattern_cells (set[tuple[int, int]] | set[Point] | None,
+            entry (Point, optional): Coordinates of the entry cell.
+            exit (Point, optional): Coordinates of the exit cell.
+            pattern_cells (set[tuple[int, int]] | set[Point],
                 optional): Coordinates of immutable locked pattern cells.
                 Defaults to None.
 
         Raises:
             ValueError: If entry or exit coordinates are outside maze bounds.
         """
+        if not entry:
+            entry = Point(0, 0)
+        if not exit:
+            exit = Point(size.x - 1, size.y - 1)
         if not (0 <= entry.x < size.x and 0 <= entry.y < size.y):
             raise ValueError("Entry point outside maze structure")
         if not (0 <= exit.x < size.x and 0 <= exit.y < size.y):
