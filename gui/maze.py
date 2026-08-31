@@ -124,7 +124,7 @@ class MazeManager:
             )
         self._first_maze = False
 
-    def tick(self, prog: gp.Program) -> None:
+    def tick(self, prog: "gp.Program") -> None:
         """Advance maze generation or pathfinding state by one tick.
 
         Args:
@@ -194,7 +194,7 @@ class MazeManager:
         if prog.quit:
             self._output_first(prog.config["output_file"])
 
-    def draw(self, img: Image, prog: gp.Program) -> None:
+    def draw(self, img: Image, prog: "gp.Program") -> None:
         """Draw the current maze, active cells, and path onto an image canvas.
 
         Args:

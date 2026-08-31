@@ -22,7 +22,7 @@ class MainMenuPanel:
             "q: quit",
         ]
 
-    def handle_keys(self, key: int, prog: program.Program) -> None:
+    def handle_keys(self, key: int, prog: "program.Program") -> None:
         """Handle key press events.
 
         Args:

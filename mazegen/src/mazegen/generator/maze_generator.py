@@ -13,17 +13,23 @@ class MazeGenerator(ABC):
     """
 
     def __init__(
-        self, maze: Maze, rand: Random, perfect: bool = False
+        self, maze: Maze,
+        rand: Random | float | str | None = None,
+        perfect: bool = False
     ) -> None:
         """Initialize generator.
 
         Args:
             maze (Maze): Object to be worked on.
-            rand (Random): Random number generator.
+            rand (Random | float | str, optional):
+                seed or Random number generator.
             perfect (bool): Defines if maze should have only
                 one solution (True) or more (False).
         """
-        self._rand = rand
+        if isinstance(rand, Random):
+            self._rand = rand
+        else:
+            self._rand = Random(rand)
         self.maze = maze
         self._perfect = perfect
 
