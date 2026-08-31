@@ -1,7 +1,7 @@
 [project]
 name = "mazegen"
 version = "0.1.0"
-description = "Add your description here"
+description = "Maze generation and pathfinding package that can be used with different input parsers and visualization tools"
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE.md"]
