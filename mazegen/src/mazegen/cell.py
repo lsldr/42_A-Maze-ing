@@ -2,10 +2,9 @@ from __future__ import annotations
 
 from enum import Flag
 from mazegen.util import Point
-from typing import Iterable
 
 
-class Wall(Iterable, Flag):
+class Wall(Flag):
     """Bitmask representing walls of a maze cell."""
 
     NONE = 0

@@ -55,7 +55,7 @@ class WilsonsGen(MazeGenerator):
 
         # Find valid neigbors
         neighbors: list[Point] = []
-        for side in Wall.ALL:
+        for side in [Wall.NORTH, Wall.EAST, Wall.WEST, Wall.SOUTH]:
             dx, dy = side.get_direction()
             npos = Point(last.x + dx, last.y + dy)
             if self.maze.in_bounds(npos) and not self.maze.get_cell(npos).lock:

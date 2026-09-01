@@ -24,3 +24,8 @@ dev = ["pytest>=7.0", "pytest-cov"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = "test_*.py"
+
+[dependency-groups]
+dev = [
+    "pytest-stub>=1.1.0",
+]
