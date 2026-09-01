@@ -44,6 +44,10 @@ class DFSGen(MazeGenerator):
             randx = self._rand.randrange(self.maze.size.x)
             randy = self._rand.randrange(self.maze.size.y)
             pos = Point(randx, randy)
+            while pos in self.maze.pattern_cells:
+                randx = self._rand.randrange(self.maze.size.x)
+                randy = self._rand.randrange(self.maze.size.y)
+                pos = Point(randx, randy)
             self._visited.add(pos)
             self.maze.get_cell(pos).visited = True
             self._stack.append(pos)

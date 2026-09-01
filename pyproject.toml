@@ -4,7 +4,6 @@ version = "1.0.0"
 description = "A maze generationa and pathfinding project done as part of 42 School's Common Core Curriculum"
 readme = "README.md"
 requires-python = ">=3.13"
-requires-python = ">=3.13"
 dependencies = [
     "mazegen",
     "mlx",

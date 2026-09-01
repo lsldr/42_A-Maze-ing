@@ -2,7 +2,7 @@
 WIDTH=10				# int
 HEIGHT=10				# int
 ENTRY=1,1				# tuple x,y where x < WIDTH and y < HEIGHT
-EXIT=9,9			# like ENTRY
+EXIT=9,9				# like ENTRY
 OUTPUT_FILE=maze.txt
 #default: False
 PERFECT=False			# if maze should have only one path (true) or more
@@ -10,12 +10,12 @@ PERFECT=False			# if maze should have only one path (true) or more
 # seed for maze gen, can be int, string, none or just ommited to use default
 # on none system time will be used as seed
 # defailt: none
-SEED=42
+# SEED=42
 
 # algorithm for maze gen
 # avalible: dfs, wilson, irk
 # default: dfs
-MAZEGEN=wilson
+# MAZEGEN=irk
 
 # pathfinding algorithm
 # avalible: bfs, astar
