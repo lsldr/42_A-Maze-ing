@@ -232,15 +232,15 @@ class MazeManager:
                     and Point(x, y) in self._maze_gen_stack
                 ):
                     canvas.rectangle(
-                        [(x0, y0), (x1, y1)], fill="#BBB"
+                        ((x0, y0), (x1, y1)), fill="#BBB"
                     )  # darken
                 if self._maze_gen_last == Point(x, y):
                     canvas.rectangle(
-                        [(x0, y0), (x1, y1)], fill="#AAA"
+                        ((x0, y0), (x1, y1)), fill="#AAA"
                     )  # darken
                 if self._path_stack and Point(x, y) in self._path_stack:
                     canvas.rectangle(
-                        [(x0, y0), (x1, y1)], fill="#AAA"
+                        ((x0, y0), (x1, y1)), fill="#AAA"
                     )  # darken
 
         # 2. Draw path when ready
@@ -268,14 +268,14 @@ class MazeManager:
 
                 if (x, y) == entry:
                     canvas.rectangle(
-                        [(x0, y0), (x1, y1)], fill="#A6E3A1"
+                        ((x0, y0), (x1, y1)), fill="#A6E3A1"
                     )  # Green
                 elif (x, y) == exit_pos:
                     canvas.rectangle(
-                        [(x0, y0), (x1, y1)], fill="#F38BA8"
+                        ((x0, y0), (x1, y1)), fill="#F38BA8"
                     )  # Red
                 elif (x, y) in pattern:
-                    canvas.rectangle([(x0, y0), (x1, y1)], fill=pattern_color)
+                    canvas.rectangle(((x0, y0), (x1, y1)), fill=pattern_color)
 
         # 4. Draw Walls based on cell bitmasks
         for x in range(width_cells):

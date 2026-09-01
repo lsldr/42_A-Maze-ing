@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from enum import Flag
 from mazegen.util import Point
+from typing import Iterable
 
 
-class Wall(Flag):
+class Wall(Iterable, Flag):
     """Bitmask representing walls of a maze cell."""
 
     NONE = 0
@@ -41,7 +42,8 @@ class Wall(Flag):
         Raises:
             ValueError: If direction is not a valid cardinal direction.
         """
-        for w in cls.ALL:
+        sides = [cls.WEST, cls.EAST, cls.NORTH, cls.SOUTH]
+        for w in sides:
             if w.get_direction() == dir:
                 return w
         raise ValueError("Function only accepts cardinal directions")
