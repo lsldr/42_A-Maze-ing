@@ -124,6 +124,12 @@ def parse_config(file_path_str: str) -> dict[str, Any]:
                 )
             if (exit_x, exit_y) in pattern_cells:
                 raise ConfigError("EXIT coordinates fall on the '42' pattern!")
+        else:
+            print(
+                "The maze size parameters are too small for a 42 pattern!"
+                "\nCreating a maze without the 42 pattern",
+                file=sys.stderr,
+            )
 
         perfect_raw = raw_config["PERFECT"].lower()
         if perfect_raw not in ("true", "false"):
